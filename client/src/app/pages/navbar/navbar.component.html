@@ -1,0 +1,161 @@
+<nav class="bg-white dark:bg-gray-800 antialiased mb-2">
+  <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-8">
+        <ul
+          class="hidden lg:flex items-center justify-start gap-6 md:gap-8 py-3 sm:justify-center"
+        >
+          <li>
+            <a
+              (click)="handleRoute('home')"
+              title=""
+              class="cursor-pointer flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
+            >
+              Home
+            </a>
+          </li>
+          <li class="shrink-0">
+            <a
+              (click)="handleRoute('product')"
+              title=""
+              class="cursor-pointer flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
+            >
+              Products
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex items-center lg:space-x-2">
+        <button
+          (click)="checkLogin()"
+          id="myCartDropdownButton1"
+          data-dropdown-toggle="myCartDropdown1"
+          type="button"
+          class="inline-flex items-center rounded-lg justify-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium leading-none text-gray-900 dark:text-white"
+        >
+          <span class="sr-only"> Cart </span>
+          <svg
+            class="w-5 h-5 lg:me-1"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
+            />
+          </svg>
+          <span class="hidden sm:flex">My Cart</span>
+        </button>
+
+        <button
+          *ngIf="role != 'user' && userLocalDetail != undefined"
+          (click)="handleRoute(role)"
+          id="myCartDropdownButton1"
+          data-dropdown-toggle="myCartDropdown1"
+          type="button"
+          class="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-auto"
+        >
+          <span class="hidden sm:flex">My DashBord</span>
+        </button>
+
+        <button
+          (click)="handleRoute('login')"
+          *ngIf="userLocalDetail == null"
+          id="myCartDropdownButton1"
+          data-dropdown-toggle="myCartDropdown1"
+          type="button"
+          class="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-auto"
+        >
+          <span class="hidden sm:flex">Login/SignUp</span>
+        </button>
+
+        <button
+          *ngIf="userLocalDetail != null"
+          (click)="logOut()"
+          id="myCartDropdownButton1"
+          data-dropdown-toggle="myCartDropdown1"
+          type="button"
+          class="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-auto"
+        >
+          <span class="hidden sm:flex">LogOut</span>
+        </button>
+
+        <img
+          style="border: 1px solid white"
+          class="w-10 h-10 rounded-full cursor-pointer p-1"
+          src="https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png"
+          alt="Rounded avatar"
+          (click)="toggleMenu()"
+          (mouseenter)="isMenuOpen = true"
+        />
+
+        <div
+          *ngIf="isMenuOpen"
+          (mouseleave)="isMenuOpen = false"
+          class="absolute right-0 top-20 w-48 bg-gray-800 text-white rounded-md shadow-lg z-10"
+        >
+          <ul class="py-1">
+            <li
+              class="block px-4 py-2 cursor-pointer hover:bg-gray-700"
+              (click)="handleRoute('account')"
+            >
+              Profile
+            </li>
+            <li
+              class="block px-4 py-2 cursor-pointer hover:bg-gray-700"
+              (click)="handleRoute('order')"
+            >
+              My Orders
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="ecommerce-navbar-menu-1"
+      class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 border border-gray-200 rounded-lg py-3 hidden px-4 mt-4"
+    >
+      <ul class="text-gray-900 text-sm font-medium dark:text-white space-y-3">
+        <li>
+          <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500"
+            >Best Sellers</a
+          >
+        </li>
+        <li>
+          <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500"
+            >Gift Ideas</a
+          >
+        </li>
+        <li>
+          <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500"
+            >Games</a
+          >
+        </li>
+        <li>
+          <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500"
+            >Electronics</a
+          >
+        </li>
+        <li>
+          <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500"
+            >Home & Garden</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

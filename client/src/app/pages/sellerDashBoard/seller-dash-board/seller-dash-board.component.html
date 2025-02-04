@@ -1,0 +1,45 @@
+<nz-layout class="dark:bg-white">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+    <div class="logo text-white flex items-center justify-center">
+      E-Cloth Store
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li
+        nz-menu-item
+        class=""
+        value="DashBoard"
+        [routerLink]="'/superadmin/addProd'"
+      >
+        DashBoard
+      </li>
+
+      <li nz-menu-item class="" [routerLink]="'/seller/addProd'">
+        Add Product
+      </li>
+      <li nz-menu-item class="" [routerLink]="'/seller/prodList'">Product List</li>
+
+      <li nz-submenu nzTitle="Products" nzIcon="user">
+        <ul>
+          <li nz-menu-item>Add Product</li>
+          <li nz-menu-item>Product List</li>
+          <!-- <li nz-menu-item>Alex</li> -->
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <span
+        class="trigger"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+        >Click</span
+      >
+    </nz-header>
+    <nz-content class="innerContent">
+      <nz-breadcrumb> </nz-breadcrumb>
+      <div class="inner-content overflow-y-scroll"><router-outlet></router-outlet></div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

@@ -1,0 +1,140 @@
+<div class="bg-white">
+  <h3 class="my-4 text-2xl font-semibold text-gray-700">
+    @if(P_id != undefined) {Add }@else {Update} Product
+  </h3>
+  <form
+    class="flex flex-col space-y-5"
+    (ngSubmit)="submitProductForm()"
+    [formGroup]="productForm"
+  >
+    <div class="flex flex-col space-y-1">
+      <label for="product-title" class="text-sm font-semibold text-gray-500"
+        >Product Title</label
+      >
+      <input
+        type="text"
+        [value]="productForm.controls['title'].value"
+        formControlName="title"
+        id="product-title"
+        placeholder="Enter title"
+        class="px-4 py-2 border border-gray-500 outline-none rounded"
+      />
+      <span
+        class="text-red-700"
+        *ngIf="productForm.controls['title'].errors?.['required'] && productForm.controls['title'].touched"
+      >
+        This is Required!!
+      </span>
+    </div>
+    <div class="flex flex-col space-y-1">
+      <label
+        for="product-description"
+        class="text-sm font-semibold text-gray-500"
+        >Product Description</label
+      >
+      <input
+        type="text"
+        formControlName="description"
+        id="product-description"
+        placeholder="Enter description"
+        class="px-4 py-2 border border-gray-500 outline-none rounded"
+      />
+      <span
+        class="text-red-700"
+        *ngIf="productForm.controls['description'].errors?.['required'] && productForm.controls['description'].touched"
+      >
+        This is Required!!
+      </span>
+    </div>
+    <div class="flex items-center justify-between space-y-1">
+      <div class="flex flex-col">
+        <label
+          for="product-category"
+          class="text-sm font-semibold text-gray-500"
+          >Category</label
+        >
+        <select
+          formControlName="category_id"
+          id="product-category"
+          class="px-4 py-2 border border-gray-500 outline-none rounded"
+          (change)="handleCategory($event)"
+        >
+          <option value="" [selected]="true">Select Category</option>
+          <option value="1">mens</option>
+          <option value="2">womens</option>
+          <option value="3">kids</option>
+        </select>
+        <span
+          class="text-red-700"
+          *ngIf="productForm.controls['category_id'].errors?.['required'] && productForm.controls['category_id'].touched"
+        >
+          This is Required!!
+        </span>
+      </div>
+      <div class="flex flex-col space-y-1">
+        <label for="product-price" class="text-sm font-semibold text-gray-500"
+          >Product Price</label
+        >
+        <input
+          type="number"
+          formControlName="price"
+          id="product-price"
+          placeholder="Enter price"
+          class="px-4 py-2 border border-gray-500 outline-none rounded"
+        />
+        <span
+          class="text-red-700"
+          *ngIf="productForm.controls['price'].errors?.['required'] && productForm.controls['price'].touched"
+        >
+          This is Required!!
+        </span>
+      </div>
+      <div class="flex flex-col space-y-1">
+        <label for="product-stock" class="text-sm font-semibold text-gray-500"
+          >Product Stock</label
+        >
+        <input
+          type="number"
+          formControlName="stock"
+          id="product-stock"
+          placeholder="Enter stock"
+          class="px-4 py-2 border border-gray-500 outline-none rounded"
+        />
+        <span
+          class="text-red-700"
+          *ngIf="productForm.controls['stock'].errors?.['required'] && productForm.controls['stock'].touched"
+        >
+          This is Required!!
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col space-y-1">
+      <label for="product-image" class="text-sm font-semibold text-gray-500"
+        >Product Image</label
+      >
+      <input
+        type="file"
+        id="fileInput"
+        (change)="handleFile($event)"
+        class="px-4 py-2 border border-gray-500 outline-none rounded"
+      />
+      <img
+        *ngIf="uploadedImgUrl != ''"
+        [src]="uploadedImgUrl"
+        class="w-24 h-24 object-cover rounded-md shadow-md"
+      />
+      <!-- <span class="text-red-700" *ngIf="productForm.controls['image'].errors?.['required'] && productForm.controls['image'].touched">
+            This is Required!!
+          </span> -->
+    </div>
+    <div>
+      <button
+        [disabled]="productForm.invalid"
+        type="submit"
+        class="w-1/4 cursor-pointer px-4 py-2 text-lg font-semibold text-white bg-primary-600 rounded-lg"
+      >
+        {{ P_id != undefined ? "Add" : "Update" }}Product
+      </button>
+    </div>
+  </form>
+</div>

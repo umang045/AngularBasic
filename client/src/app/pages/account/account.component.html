@@ -1,0 +1,166 @@
+<div class="w-full h-auto bg-gray-800 flex gap-3 p-5">
+  <div
+    class="w-1/3 bg-gray-700 h-80 rounded-lg flex flex-col gap-1 items-center justify-center"
+  >
+    <div class="text-lg font-bold text-white">Your Profile</div>
+    <div>
+      <img
+        [src]="profileImgUrl"
+        alt="Add image"
+        class="w-44 h-44 cursor-pointer object-cover rounded-md shadow-md"
+      />
+    </div>
+    <div>
+      <input
+        type="file"
+        id="fileInput"
+        (change)="handleFile($event)"
+        class="px-4 py-2 border border-gray-500 outline-none rounded"
+      />
+    </div>
+  </div>
+  <div class="w-full flex bg-gray-700 h-auto rounded-lg p-2">
+    <div class="w-1/2">
+      <form
+        [formGroup]="profileForm"
+        (ngSubmit)="submitForm()"
+        class="w-full flex items-center justify-center p-3"
+      >
+        <div
+          class="w-full flex m-auto flex-col flex-wrap gap-4 box-border items-center justify-center"
+        >
+          <div class="mb-5 w-full">
+            <label
+              for="password"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Name</label
+            >
+            <input
+              (focus)="(true)"
+              type="text"
+              formControlName="name"
+              id="name"
+              class="bg-gray-50 border-2 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+            />
+            <span
+              class="text-red-700"
+              *ngIf="profileForm.controls['name'].errors?.['required'] && profileForm.controls['name'].touched"
+              >This is Required!!</span
+            >
+          </div>
+          <div class="mb-5 w-full">
+            <label
+              for="password"
+              formControlName="email"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="password"
+              class="bg-gray-50 border-2 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+              formControlName="email"
+            />
+            <span
+              class="text-red-700"
+              *ngIf="profileForm.controls['email'].errors?.['required'] && profileForm.controls['email'].touched"
+              >This is Required!!</span
+            >
+            <span
+              class="text-red-700"
+              *ngIf="profileForm.controls['email'].errors?.['email'] && profileForm.controls['email'].touched"
+              >Invalid Email</span
+            >
+          </div>
+          <div class="mb-5 w-full">
+            <label
+              for="password"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Mobile</label
+            >
+            <input
+              type="number"
+              id="password"
+              formControlName="mobile"
+              class="bg-gray-50 border-2 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+            />
+            <span
+              class="text-red-700"
+              *ngIf="profileForm.controls['mobile'].errors?.['required'] && profileForm.controls['mobile'].touched"
+              >This is Required!!</span
+            >
+          </div>
+
+          <div>
+            <button
+              mat-raised-button
+              [disabled]="profileForm.invalid"
+              type="submit"
+              color="primary"
+              class="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+            >
+              Update Profile
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="w-1/2 flex flex-col items-center gap-2 p-2">
+      <div class="w-1/2">
+        <button
+          (click)="openForgotDialog()"
+          mat-raised-button
+          [disabled]="profileForm.invalid"
+          type="submit"
+          color="primary"
+          class="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+        >
+          Update Pass
+        </button>
+      </div>
+      <div class="w-1/2">
+        <button
+          (click)="openAddressDialog()"
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+        >
+          + Address
+        </button>
+      </div>
+      <div
+        class="w-full h-full flex flex-col gap-1 items-center text-white p-1"
+      >
+        <div>Your Addresses</div>
+        <div
+          class="flex w-full flex-col h-auto bg-gray-800 rounded-lg relative"
+          *ngFor="let item of addressData"
+        >
+          <button
+            (click)="delUserAddress(item?.address_id)"
+            class="bg-red-800 absolute right-0"
+            style="top: -5px"
+          >
+            Del
+          </button>
+          <div class="w-full justify-evenly h-auto pb-0 flex gap-1 mb-">
+            <p>country :{{ item?.country }}</p>
+            <p>state : {{ item?.state }}</p>
+            <p>city :{{ item?.state }}</p>
+          </div>
+          <div class="w-full flex justify-evenly">
+            <p>add address : {{ item?.address }}</p>
+          </div>
+          <div class="w-full flex justify-evenly">
+            <p>pincode : {{ item?.pincode }}</p>
+            <p>mobile : {{ item.mobile }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

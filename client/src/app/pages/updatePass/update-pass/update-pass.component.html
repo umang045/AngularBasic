@@ -1,0 +1,80 @@
+<div class="bg-gray-800 border-2 m-2 rounded-lg">
+  <form
+    class="w-full flex items-center justify-center p-3"
+    [formGroup]="updatePassForm"
+  >
+    <div
+      class="w-full flex m-auto flex-col flex-wrap gap-4 box-border items-center justify-center"
+    >
+      @if(!isPassCorrect) {
+      <div class="mb-5 w-full">
+        <label
+          for="password"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Old Pass</label
+        >
+        <input
+          (focus)="(true)"
+          type="password"
+          id="name"
+          formControlName="password"
+          class="bg-gray-50 border-2 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+        <span
+          class="text-red-700"
+          *ngIf="updatePassForm.controls['password'].errors?.['required'] && updatePassForm.controls['password'].touched"
+          >This is Required!!</span
+        >
+      </div>
+
+      <div>
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          [disabled]="updatePassForm.controls['password'].errors?.['required']"
+          (click)="checkPassword()"
+        >
+          Check
+        </button>
+      </div>
+      } @if(isPassCorrect) {
+      <div class="w-full flex items-center justify-center flex-col">
+        <div class="mb-5 w-full">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >New Pass</label
+          >
+          <input
+            (focus)="(true)"
+            type="password"
+            id="name"
+            formControlName="new_password"
+            class="bg-gray-50 border-2 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+          <span
+            class="text-red-700"
+            *ngIf="updatePassForm.controls['new_password'].errors?.['required'] && updatePassForm.controls['new_password'].touched"
+            >This is Required!!</span
+          >
+        </div>
+
+        <div>
+          <button
+            mat-raised-button
+            type="button"
+            color="primary"
+            [disabled]="updatePassForm.controls['new_password'].errors?.['required']"
+            (click)="updatePassword()"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </form>
+</div>

@@ -1,0 +1,89 @@
+<div class="">
+  <input
+    type="text"
+    class="px-4 py-2 border border-gray-500 outline-none rounded mb-2"
+    placeholder="Search Here"
+    #searchInput
+    (input)="handleSearch(searchInput.value)"
+  />
+  <nz-table
+    [nzData]="sellerData"
+    [nzNoResult]="noDataTemplate"
+    [nzShowPagination]="false"
+  >
+    <thead>
+      <tr>
+        <th nzWidth="10%">Image</th>
+        <th nzWidth="15%">Title</th>
+        <th nzWidth="35%">Description</th>
+        <th nzWidth="10%">Price</th>
+        <th nzWidth="10%">Stock</th>
+        <th nzWidth="20%">Action</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="sellerData.length > 0; else noDataTemplate">
+      <tr class="cursor-pointer" *ngFor="let data of sellerData">
+        <td>
+          <img
+            [src]="data.image"
+            [alt]="data.title"
+            class="w-10 h-10 object-cover rounded-md shadow-md"
+            (click)="showModal(data?.image)"
+          />
+        </td>
+        <td>{{ data.title }}</td>
+        <td>{{ data.description }}</td>
+        <td>{{ data.price }}</td>
+        <td>{{ data.stock }}</td>
+        <td>
+          <button>
+            <nz-icon
+              nzType="edit"
+              nzTheme="outline"
+              routerLinkActive="router-link-active"
+              (click)="handleRoute(data?.product_id)"
+              style="color: blue"
+            ></nz-icon>
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button (click)="handleDeleteProd(data?.product_id)">
+            <nz-icon
+              nzType="delete"
+              nzTheme="outline"
+              style="color: red"
+            ></nz-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #noDataTemplate>
+    <div class="text-center my-4">
+      <h1>No Data Found</h1>
+    </div>
+  </ng-template>
+  <nz-pagination
+    [nzPageIndex]="page"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    (nzPageIndexChange)="onPageChange($event)"
+  ></nz-pagination>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="Image"
+    nzOkDisabled="true"
+    nzCancelDisabled="true"
+    nzFooter=" "
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+  >
+    <ng-container *nzModalContent>
+      <div class="flex w-full items-center justify-center">
+        <img
+          [src]="showImg"
+          class="w-40 h-40 object-cover rounded-md shadow-md"
+        />
+      </div>
+    </ng-container>
+  </nz-modal>
+</div>
