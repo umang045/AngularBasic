@@ -6,7 +6,8 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { NgxStarsModule } from 'ngx-stars';
 import { CommonModule } from '@angular/common';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
-
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import {
   FormBuilder,
   FormControl,
@@ -19,6 +20,8 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-singleprod',
   imports: [
+    NzModalModule,
+    NzIconModule,
     NgxStarsModule,
     CommonModule,
     ReactiveFormsModule,
@@ -47,6 +50,8 @@ export class SingleprodComponent {
 
   isAdded = false;
 
+  singleUserReview: any = [];
+
   reviewForm = new FormGroup({
     review: new FormControl('', [Validators.required]),
     rating: new FormControl(''),
@@ -60,6 +65,7 @@ export class SingleprodComponent {
     this.fetchProductsReviews();
     this.getUserId();
     this.fetchUserCart();
+    this.getUserReview();
     console.log(this.reviewForm.controls['color_id'].value);
     console.log(this.isAdded);
   }
@@ -95,8 +101,7 @@ export class SingleprodComponent {
   async fetchProductsReviews() {
     try {
       const result = await this.prodService.getProductReviews(this.P_id);
-      this.productReviews = result;
-      console.log(result);
+      this.productReviews = result.filter((e: any) => e.user_id != this.userId);
     } catch (error) {
       console.log(error);
     }
@@ -124,6 +129,7 @@ export class SingleprodComponent {
       this.tost.success('Your Review Submitted!!');
       this.reviewForm.reset();
       await this.fetchProductsReviews();
+      await this.getUserReview();
     } catch (error) {
       this.tost.error('something went wrong!!');
     }
@@ -188,5 +194,27 @@ export class SingleprodComponent {
     } catch (error) {
       this.tost.error(' Error fetching cart data');
     }
+  }
+
+  async getUserReview() {
+    try {
+      const result = await this.prodService.getUsersReview({
+        productId: this.P_id,
+        userId: this.userId,
+      });
+      this.singleUserReview = result;
+      console.log(result);
+    } catch (error) {
+      this.tost.error('Error fetching review data');
+    }
+  }
+
+  async delReviewOfUser(review_id: any) {
+    try {
+      // console.log(review_id);
+      const result = await this.prodService.delProdReview(review_id);
+      this.tost.success('Review Deleted');
+      this.getUserReview();
+    } catch (error) {}
   }
 }

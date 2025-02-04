@@ -101,17 +101,30 @@ const addReview = async (req, res) => {
 
 //del review from product
 const delReview = async (req, res) => {
-  const { productId, userId } = req.body;
+  const { review_id } = req.params;
 
   try {
-    const [resultSets, fields] = await db.query(
-      "CALL manageReviews('delReview',?,?,?,?)",
-      [productId, userId, null, null]
-    );
+    const qry = "delete from reviews where review_id = ?";
+
+    const [resultSets, fields] = await db.query(qry,[review_id]);
     return res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
     console.error("Error deleting review:", error);
     return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//fetch users review
+const getUsersReview = async (req, res, next) => {
+  const { productId, userId } = req.body;
+  try {
+    const qry =
+      "SELECT users.name, reviews.* FROM reviews JOIN users ON reviews.user_id = users.user_id 	WHERE reviews.product_id = ? and reviews.user_id = ?;";
+    const [resultSets, fields] = await db.query(qry, [productId, userId]);
+    return res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -289,6 +302,7 @@ const searchProd = async (req, res) => {
 };
 
 module.exports = {
+  getUsersReview,
   getAllProduct,
   getSingleProd,
   addReview,

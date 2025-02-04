@@ -12,6 +12,7 @@ const {
   deleteProduct,
   getProductsBySellerId,
   searchProd,
+  getUsersReview,
 } = require("../controller/product");
 const { upload } = require("../middleware/uploadImg");
 const cloudinary = require("../utils/cloudinary");
@@ -22,7 +23,8 @@ router.get("/", getAllProduct);
 router.get("/:id", getSingleProd);
 router.post("/review", addReview);
 router.get("/review/:id", getAllReviewOfProduct);
-router.delete("/review/del", delReview);
+router.delete("/review/del/:review_id", delReview);
+router.post("/getUserReview", getUsersReview);
 
 router.post("/sellerProd/search", searchProd);
 router.get("/sellerProd/:seller_id", getProductsBySellerId);
