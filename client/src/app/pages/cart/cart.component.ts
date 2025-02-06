@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
-  imports: [NgFor, FormsModule,CommonModule],
+  imports: [NgFor, FormsModule, CommonModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
 })
@@ -32,17 +32,25 @@ export class CartComponent {
     this.userId = id?.id;
   }
 
-  async fetchUserCart() {
+  async updateQuantity(event: any) {
+    const quantity = event?.event?.target.value;
+    const pid = event?.pid;
+
     try {
-      const result = await this.authService.getUserCart(this.userId);
-      this.cartData = result;
-      console.log(result);
-      
-      this.total = this.cartData.reduce((acc: any, item: any) => {
-        return acc + item.price * item.quantity;
-      }, 0);
+      await this.authService.updateCartQuantity({
+        pid: pid,
+        uid: this.userId,
+        quntity: quantity,
+      });
+
+      const itemIndex = this.cartData.findIndex((item: any) => item.id === pid);
+      if (itemIndex !== -1) {
+        this.cartData[itemIndex].quantity = quantity;
+        this.total = this.calculateTotal();
+      }
+      await this.fetchUserCart();
     } catch (error) {
-      this.tost.error(' Error fetching cart data');
+      this.tost.error('Something Went Wrong');
     }
   }
 
@@ -60,27 +68,25 @@ export class CartComponent {
     this.router.navigateByUrl(`/${url}`);
   }
 
-  async updateQuantity(event: any) {
-    const quantity = event?.event?.target.value;
-    const pid = event?.pid;
-
+  async fetchUserCart() {
     try {
-      await this.authService.updateCartQuantity({
-        pid: pid,
-        uid: this.userId,
-        quntity: quantity,
-      });
-
-      const itemIndex = this.cartData.findIndex((item: any) => item.id === pid);
-      if (itemIndex !== -1) {
-        this.cartData[itemIndex].quantity = quantity;
-        this.total = this.cartData.reduce((acc: any, item: any) => {
-          return acc + item.price * item.quantity;
-        }, 0);
-      }
+      const result = await this.authService.getUserCart(this.userId);
+      this.cartData = result;
+      this.total = this.calculateTotal();
     } catch (error) {
-      this.tost.error('Something Went Wrong');
+      this.tost.error('Error fetching cart data');
     }
   }
-
+  calculateTotal() {
+    return this.cartData.reduce((acc: any, item: any) => {
+      if (
+        item?.active == true &&
+        typeof item.price === 'number' &&
+        typeof item.quantity === 'number'
+      ) {
+        return acc + item.price * item.quantity;
+      }
+      return acc;
+    }, 0);
+  }
 }

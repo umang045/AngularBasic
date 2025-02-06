@@ -1,0 +1,15 @@
+<google-map
+  height="500px"
+  width="900px"
+  [center]="center"
+  [zoom]="zoom"
+  (mapClick)="onMapClick($event)"
+  [options]="{ mapTypeId: 'roadmap' }"
+>
+  <map-marker
+    *ngFor="let marker of markers"
+    [position]="marker.position"
+    [title]="marker.title"
+  >
+  </map-marker
+></google-map>

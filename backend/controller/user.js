@@ -51,8 +51,8 @@ const checkAddress = async (req, res, next) => {
   try {
     const { country, state, city, address, pincode, users_id } = req.body;
     const [result, feild] = await db.query(
-      "call manageAddress('checkAddress',?,?,?,?,?,?,?)",
-      [country, state, city, address, pincode, users_id, null]
+      "call manageAddress('checkAddress',?,?,?,?,?,?,?,?,?)",
+      [country, state, city, address, pincode, null, null, users_id, null]
     );
     const total = result[0][0]?.totalRecord;
     if (total >= 3) {
@@ -69,11 +69,12 @@ const checkAddress = async (req, res, next) => {
 
 //add address of users
 const addUsersAddress = async (req, res, next) => {
-  const { country, state, city, address, pincode, users_id } = req.body;
+  const { country, state, city, address, pincode, lat, lng, users_id } =
+    req.body;
   try {
     const [result, feild] = await db.query(
-      "call manageAddress('addAddress',?,?,?,?,?,?,?)",
-      [country, state, city, address, pincode, users_id, null]
+      "call manageAddress('addAddress',?,?,?,?,?,?,?,?,?)",
+      [country, state, city, address, pincode, lat, lng, users_id, null]
     );
     res
       .status(200)
@@ -88,8 +89,8 @@ const fetchUsersAddress = async (req, res, next) => {
   try {
     const { users_id } = req.params;
     const [result, feild] = await db.query(
-      "call manageAddress('fetchAddress',?,?,?,?,?,?,?)",
-      [null, null, null, null, null, users_id, null]
+      "call manageAddress('fetchAddress',?,?,?,?,?,?,?,?,?)",
+      [null, null, null, null, null, null, null, users_id, null]
     );
     res.status(200).json(result[0]);
   } catch (error) {}
@@ -102,8 +103,8 @@ const delUsersAddress = async (req, res, next) => {
     console.log(address_id);
 
     const [result, feild] = await db.query(
-      "call manageAddress('delAddress',?,?,?,?,?,?,?)",
-      [null, null, null, null, null, null, address_id]
+      "call manageAddress('delAddress',?,?,?,?,?,?,?,?,?)",
+      [null, null, null, null, null, null, null, null, address_id]
     );
     res.status(200).json({ message: "your address deleted sucesfully" });
   } catch (error) {
@@ -185,6 +186,7 @@ const getCart = async (req, res) => {
 //update Quantity in Cart
 const updateQuantity = async (req, res) => {
   const { pid, uid, quntity } = req.body;
+  console.log(pid, uid, quntity);
 
   try {
     const [resultSets, fields] = await db.query(
@@ -213,8 +215,7 @@ const addOrder = (req, res) => {
 };
 
 //place order
-
-const placeOrder = async(req,res) =>{
+const placeOOrder = async (req, res) => {
   exports.placeOrder = asyncErrorHandler(async (req, res, next) => {
     /*
       Notes:
@@ -230,7 +231,7 @@ const placeOrder = async(req,res) =>{
     let user_id = req.user.id;
     //start transaction
     await db.query("START TRANSACTION");
-   
+
     try {
       //get cart data********************************
       let [cart_data] = await db.query("select * from cart where user_id=?", [
@@ -241,7 +242,7 @@ const placeOrder = async(req,res) =>{
         await db.query("ROLLBACK");
         return res.status(401).send({ result: false, msg: "Cart is Empty!!" });
       }
-   
+
       let total_amount = 0,
         status = "Pending";
       for (let i = 0; i < cart_data.length; i++) {
@@ -249,7 +250,7 @@ const placeOrder = async(req,res) =>{
       }
       //   console.log(total_amount);
       //   console.log(new Date());
-   
+
       //insert in payment**************************
       let [payment] = await db.query("call CREATE_PAYMENT(?,?,?,?,?)", [
         user_id,
@@ -260,13 +261,13 @@ const placeOrder = async(req,res) =>{
       ]);
       //   console.log(payment[0][0].payment_id);
       let payment_id = payment[0][0].payment_id;
-   
+
       //insert in order****************************
       let [check] = await db.query("select user_id from address where id=?", [
         address_id,
       ]);
       console.log(check);
-   
+
       if (check[0].user_id != user_id) {
         await db.query("ROLLBACK");
         return res
@@ -279,10 +280,10 @@ const placeOrder = async(req,res) =>{
         payment_id,
         status,
       ]);
-   
+
       //   console.log(order[0][0].id);
       let order_id = order[0][0].id;
-   
+
       //insert in order_items**********************
       for (let i = 0; i < cart_data.length; i++) {
         await db.query("call ADD_ITEMS_TO_ORDER_ITEMS(?,?,?,?)", [
@@ -291,32 +292,36 @@ const placeOrder = async(req,res) =>{
           cart_data[i].quantity,
           cart_data[i].price,
         ]);
-   
+
         let [stock] = await db.query("select stock from products where id=?", [
           cart_data[i].product_id,
         ]);
-   
+
         // console.log(stock);
-   
+
         if (stock[0].stock < cart_data[i].quantity) {
           await db.query("ROLLBACK");
           return res
             .status(401)
             .send({ result: false, msg: "Product Out of Stock!!" });
         }
-   
+
         await db.query(
           "update products set stock=stock-?,total_sell=total_sell+? where id=?",
-          [cart_data[i].quantity, cart_data[i].quantity, cart_data[i].product_id]
+          [
+            cart_data[i].quantity,
+            cart_data[i].quantity,
+            cart_data[i].product_id,
+          ]
         );
       }
-   
+
       //clear cart
       await db.query("delete from cart where user_id=?", [user_id]);
-   
+
       //commit transaction
       await db.query("COMMIT");
-   
+
       res.status(200).send({ result: true });
     } catch (error) {
       //rollback transaction
@@ -325,10 +330,114 @@ const placeOrder = async(req,res) =>{
       return res.status(401).send({ result: false, msg: "Bad Request" });
     }
   });
-}
+};
+
+//place order
+const placeOrder = async (req, res) => {
+  const { payment_method, payment_status, address_id, user_id } = req.body;
+  // console.log(payment_method, address_id, user_id);
+
+  try {
+    //get cart
+    // await db.query("start transaction");
+    const [cartResult, fields] = await db.query(
+      "CALL manageCart('fetchCart',?,?,?,?,?,?)",
+      [user_id, null, null, null, null, null]
+    );
+    if (cartResult.length == 0) {
+      // await db.query("rollback");
+      return res.status(409).json({ message: "nothing in your cart!!" });
+    }
+
+    //calcul
+    let amount = 0;
+    let Orderstatus = "pending";
+    for (let index = 0; index < cartResult[0].length; index++) {
+      if (cartResult[0][index]?.active == true) {
+        amount += cartResult[0][index]?.price * cartResult[0][index]?.quantity;
+      }
+    }
+
+    //add to order
+    const [orderResult] = await db.query("call addOrder (?,?,?,?)", [
+      user_id,
+      address_id,
+      amount,
+      Orderstatus,
+    ]);
+
+    const orderId = orderResult[0][0].order_id;
+
+    // console.log("Inserted Order ID:", orderId);
+
+    console.log(amount);
+
+    //add in payment table
+    const [paymentResult] = await db.query("call addPayment(?,?,?,?,?)", [
+      orderId,
+      user_id,
+      payment_method,
+      amount,
+      payment_status,
+    ]);
+
+    //add order_items
+    for (let index = 0; index < cartResult[0].length; index++) {
+      if (cartResult[0][index]?.active == true) {
+        const [orderItemResult, orderItemFields] = await db.query(
+          "call addOrderItem(?,?,?,?,?,?)",
+          [
+            orderId,
+            cartResult[0][index].product_id,
+            cartResult[0][index].color_id,
+            cartResult[0][index].quantity,
+            cartResult[0][index].size,
+            cartResult[0][index].price,
+          ]
+        );
+
+        //update stock & total sell
+        let [stockResult] = await db.query(
+          "update products set stock=stock-?,totalsell=totalsell+? where product_id=?",
+          [
+            cartResult[0][index].quantity,
+            cartResult[0][index].quantity,
+            cartResult[0][index].product_id,
+          ]
+        );
+
+        let [transactionResult] = await db.query(
+          "call order_transaction(?,?,?,?)",
+          [
+            user_id,
+            cartResult[0][index].product_id,
+            null,
+            cartResult[0][index].quantity,
+          ]
+        );
+      }
+    }
+
+    await db.query("delete from cart where user_id = ?", [user_id]);
+    return res.json({ message: "order Placed SuccesFully!!" });
+  } catch (error) {
+    // await db.query("rollback");
+    throw new Error(error);
+  }
+};
+
+const cancleOrder = async (req, res) => {
+  const { order_id } = req.params;
+  
+  try {
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 module.exports = {
   // getUser,
+  placeOrder,
   addUsersAddress,
   checkAddress,
   getAllUsers,

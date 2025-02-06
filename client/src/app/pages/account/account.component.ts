@@ -18,11 +18,15 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UpdatePassComponent } from '../updatePass/update-pass/update-pass.component';
 import { UserAddressComponent } from '../userAddress/user-address/user-address.component';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
-
+import { GooglmapComponent } from '../googlemap/googlmap/googlmap.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-account',
   imports: [
     CommonModule,
+    NzIconModule,
+    NzModalModule,
     MatDialogModule,
     NzCollapseModule,
     NgIf,
@@ -39,7 +43,8 @@ export class AccountComponent {
   authService = inject(AuthservService);
   prodService = inject(ProdsevService);
 
-  readonly dialog = inject(MatDialog);
+  dialog = inject(MatDialog);
+
   router = inject(Router);
   toast = inject(ToastrService);
   userId: any;
@@ -144,10 +149,13 @@ export class AccountComponent {
   }
 
   openAddressDialog() {
-    const dialogRef = this.dialog.open(UserAddressComponent, {
+    const dialogRef = this.dialog.open(GooglmapComponent, {
       height: 'auto',
-      width: '500px',
+      width: 'auto',
       data: this.userId,
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      this.fetchUsersAddress();
     });
   }
 
@@ -155,7 +163,7 @@ export class AccountComponent {
     try {
       const result = await this.authService.fetchUsersAddress(this.userId);
       this.addressData = result;
-      // console.log(this.addressData);
+      console.log(this.addressData);
 
       // console.log(result);
     } catch (error: any) {
@@ -173,5 +181,4 @@ export class AccountComponent {
       this.toast.error(error.error);
     }
   }
-
 }

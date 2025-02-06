@@ -140,24 +140,29 @@
           class="flex w-full flex-col h-auto bg-gray-800 rounded-lg relative"
           *ngFor="let item of addressData"
         >
-          <button
-            (click)="delUserAddress(item?.address_id)"
-            class="bg-red-800 absolute right-0"
-            style="top: -5px"
-          >
-            Del
-          </button>
           <div class="w-full justify-evenly h-auto pb-0 flex gap-1 mb-">
             <p>country :{{ item?.country }}</p>
             <p>state : {{ item?.state }}</p>
-            <p>city :{{ item?.state }}</p>
           </div>
+          <div class="w-full flex justify-evenly"></div>
           <div class="w-full flex justify-evenly">
-            <p>add address : {{ item?.address }}</p>
-          </div>
-          <div class="w-full flex justify-evenly">
+            <p>city :{{ item?.city }}</p>
             <p>pincode : {{ item?.pincode }}</p>
-            <p>mobile : {{ item.mobile }}</p>
+          </div>
+          <div
+            class="w-10 gap-2 h-8 flex items-center justify-center cursor-pointer bg-gray-900 rounded-lg absolute right-0 top-1/2"
+          >
+            <nz-icon
+              nzType="delete"
+              nzTheme="outline"
+              style="color: red"
+              (click)="delUserAddress(item?.address_id)"
+            ></nz-icon>
+            <nz-icon
+              nzType="eye"
+              nzTheme="outline"
+              (click)="openAddressDialog()"
+            />
           </div>
         </div>
       </div>

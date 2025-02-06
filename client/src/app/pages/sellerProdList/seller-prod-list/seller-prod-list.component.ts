@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgModule } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { CommonModule, NgFor } from '@angular/common';
@@ -10,11 +10,17 @@ import { ToastrService } from 'ngx-toastr';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @Component({
   selector: 'app-seller-prod-list',
   imports: [
     NzModalModule,
+    NzImageModule,
+    MatSlideToggleModule,
+    NzSpaceModule,
     NzButtonModule,
     ReactiveFormsModule,
     NzPaginationModule,
@@ -134,5 +140,15 @@ export class SellerProdListComponent {
     this.page = page;
     console.log(page);
     this.getFilterdData();
+  }
+
+  async changeStatus(product_id: any) {
+    // console.log(product_id);
+    try {
+      const result = await this.prodService.toogleProd(product_id);
+      this.getProdList();
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

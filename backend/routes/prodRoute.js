@@ -13,6 +13,7 @@ const {
   getProductsBySellerId,
   searchProd,
   getUsersReview,
+  toogleProd,
 } = require("../controller/product");
 const { upload } = require("../middleware/uploadImg");
 const cloudinary = require("../utils/cloudinary");
@@ -22,6 +23,7 @@ const router = express.Router();
 router.get("/", getAllProduct);
 router.get("/:id", getSingleProd);
 router.post("/review", addReview);
+router.post("/active/:product_id", toogleProd);
 router.get("/review/:id", getAllReviewOfProduct);
 router.delete("/review/del/:review_id", delReview);
 router.post("/getUserReview", getUsersReview);

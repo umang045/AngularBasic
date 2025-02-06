@@ -106,7 +106,7 @@ const delReview = async (req, res) => {
   try {
     const qry = "delete from reviews where review_id = ?";
 
-    const [resultSets, fields] = await db.query(qry,[review_id]);
+    const [resultSets, fields] = await db.query(qry, [review_id]);
     return res.status(200).json({ message: "Review deleted successfully" });
   } catch (error) {
     console.error("Error deleting review:", error);
@@ -284,6 +284,19 @@ const getProductsBySellerId = async (req, res) => {
   }
 };
 
+//active inactive product
+const toogleProd = async (req, res) => {
+  const { product_id } = req.params;
+  console.log(product_id);
+  
+  try {
+    const [result, column] = await db.query("call activeProd(?)", [product_id]);
+    res.status(200).json({message : "toogle work"});
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 //search product
 const searchProd = async (req, res) => {
   const { search, page, seller_id } = req.body;
@@ -315,4 +328,5 @@ module.exports = {
   deleteProduct,
   getProductsBySellerId,
   searchProd,
+  toogleProd,
 };

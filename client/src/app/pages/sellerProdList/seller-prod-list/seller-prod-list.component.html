@@ -18,6 +18,7 @@
         <th nzWidth="35%">Description</th>
         <th nzWidth="10%">Price</th>
         <th nzWidth="10%">Stock</th>
+        <th nzWidth="10%">Status</th>
         <th nzWidth="20%">Action</th>
       </tr>
     </thead>
@@ -30,11 +31,28 @@
             class="w-10 h-10 object-cover rounded-md shadow-md"
             (click)="showModal(data?.image)"
           />
+
+          <!-- <nz-space [nzSize]="10">
+            <img
+              *nzSpaceItem
+              nz-image
+              width="200px"
+              height="200px"
+              [nzSrc]="data?.image"
+            />
+          </nz-space> -->
         </td>
         <td>{{ data.title }}</td>
         <td>{{ data.description }}</td>
         <td>{{ data.price }}</td>
         <td>{{ data.stock }}</td>
+        <td class="">
+          <mat-slide-toggle
+            [checked]="data?.is_active == true"
+            (change)="changeStatus(data?.product_id)"
+          >
+          </mat-slide-toggle>
+        </td>
         <td>
           <button>
             <nz-icon

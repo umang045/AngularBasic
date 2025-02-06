@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+
 import {
   FormBuilder,
   FormControl,
@@ -39,6 +40,7 @@ export class SingleprodComponent {
   singleProd: any = [];
   productReviews: any = [];
   cartData: any = [];
+  myThumNail: any = '';
 
   P_id = Number.parseInt(this.route.url.toString().split('/')[2]);
   ratting: any;
@@ -73,7 +75,7 @@ export class SingleprodComponent {
   async getSingleProducts() {
     try {
       const result = await this.prodService.getSingleProd(this.P_id);
-      console.log(result);
+      this.myThumNail = result[0][0]?.image;
 
       this.singleProd = result[0];
       this.colors = result[1];

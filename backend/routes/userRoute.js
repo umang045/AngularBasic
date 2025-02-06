@@ -13,10 +13,12 @@ const {
   fetchUsersAddress,
   delUsersAddress,
   checkProdCart,
+  placeOrder,
 } = require("../controller/user");
 const { updateProfilePic } = require("../controller/auth");
 const router = express.Router();
 
+router.post("/addorder", placeOrder);
 router.post("/addAddress", checkAddress, addUsersAddress);
 router.get("/getAddress/:users_id", fetchUsersAddress);
 router.delete("/delAddress/:address_id", delUsersAddress);

@@ -90,14 +90,22 @@ export class AuthservService {
   }
 
   addUsersAddress(userAddressData: any): Promise<any> {
+    console.log(userAddressData);
+    
     return lastValueFrom(
-      this.http.get(`${this.url}/user/addAddress`, userAddressData)
+      this.http.post(`${this.url}/user/addAddress`, userAddressData)
     );
   }
 
   checkCartProd(checkData: any): Promise<any> {
     return lastValueFrom(
       this.http.post(`${this.url}/user/checkCart`, checkData)
+    );
+  }
+
+  placeOrder(orderData : any):Promise<any> {
+    return lastValueFrom(
+      this.http.post(`${this.url}/user/addorder`, orderData)
     );
   }
 }

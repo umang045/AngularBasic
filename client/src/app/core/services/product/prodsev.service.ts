@@ -91,4 +91,11 @@ export class ProdsevService {
       this.http.delete(this.url + `/product/review/del/${review_id}`)
     );
   }
+
+  //toogle product
+  toogleProd(product_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.post(this.url + `/product/active/${product_id}`, null)
+    );
+  }
 }
