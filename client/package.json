@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@hivegpt/angular": "^0.0.86",
     "igniteui-webcomponents": "^5.2.1",
     "ng-zorro-antd": "^19.0.2",
     "ngx-bootstrap-icons": "^1.9.3",

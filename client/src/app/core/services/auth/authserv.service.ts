@@ -91,7 +91,7 @@ export class AuthservService {
 
   addUsersAddress(userAddressData: any): Promise<any> {
     console.log(userAddressData);
-    
+
     return lastValueFrom(
       this.http.post(`${this.url}/user/addAddress`, userAddressData)
     );
@@ -103,9 +103,27 @@ export class AuthservService {
     );
   }
 
-  placeOrder(orderData : any):Promise<any> {
+  placeOrder(orderData: any): Promise<any> {
     return lastValueFrom(
       this.http.post(`${this.url}/user/addorder`, orderData)
+    );
+  }
+
+  getUsersOrde(user_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/getUserOrder/${user_id}`)
+    );
+  }
+
+  getUsersOrderProd(order_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/getUserOrderProd/${order_id}`)
+    );
+  }
+
+  cancleUserOrder(cancleOrdData: any): Promise<any> {
+    return lastValueFrom(
+      this.http.post(`${this.url}/user/delUserOrder`, cancleOrdData)
     );
   }
 }

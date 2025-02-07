@@ -13,12 +13,15 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-seller-prod-list',
   imports: [
     NzModalModule,
+    FormsModule,
     NzImageModule,
+    NzSwitchModule,
     MatSlideToggleModule,
     NzSpaceModule,
     NzButtonModule,
@@ -35,6 +38,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
   templateUrl: './seller-prod-list.component.html',
   styleUrl: './seller-prod-list.component.css',
 })
+
 export class SellerProdListComponent {
   prodService = inject(ProdsevService);
   router = inject(Router);
@@ -56,6 +60,7 @@ export class SellerProdListComponent {
     this.showImg = image;
     this.isVisible = true;
   }
+
   handleOk(): void {
     console.log('Button ok clicked!');
     this.isVisible = false;

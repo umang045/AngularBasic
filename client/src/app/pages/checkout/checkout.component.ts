@@ -12,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthservService } from '../../core/services/auth/authserv.service';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -45,6 +46,7 @@ export class CheckoutComponent {
   tost = inject(ToastrService);
   selectedAddressId: any = null;
   payment_method: any = 'select';
+  router = inject(Router);
 
   markers: { position: google.maps.LatLngLiteral; title: string }[] = [];
 
@@ -74,7 +76,7 @@ export class CheckoutComponent {
           console.log('Payment dismissed');
         },
       },
-      handler: this.paymentSuccessHandler.bind(this)
+      handler: this.paymentSuccessHandler.bind(this),
     };
 
     // const successCallback = async (paymentid: any) => {
@@ -113,6 +115,9 @@ export class CheckoutComponent {
         payment_status: 'done',
       });
       this.toast.success('Order placed successfully!');
+      setTimeout(() => {
+        this.router.navigate(['/order/' + this.userId]);
+      }, 2000);
     } catch (error) {
       console.log(error);
       this.toast.error('Error placing order');
@@ -247,6 +252,9 @@ export class CheckoutComponent {
         payment_status: 'pending',
       });
       this.toast.success('order Placed Succesfully!!');
+      setTimeout(() => {
+        this.router.navigate(['/order/' + this.userId]);
+      }, 2000);
     } catch (error) {
       console.log(error);
     }

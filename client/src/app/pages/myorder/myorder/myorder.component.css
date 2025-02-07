@@ -1,0 +1,18 @@
+.status-pending {
+    background-color: yellow;
+  }
+  
+  .status-delivered {
+    background-color: green;
+    color: white;
+  }
+  
+  .status-intransit {
+    background-color: orange;
+    color: white;
+  }
+  
+  .status-cancelled {
+    background-color: red;
+    color: white;
+  }

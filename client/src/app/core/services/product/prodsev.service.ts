@@ -98,4 +98,11 @@ export class ProdsevService {
       this.http.post(this.url + `/product/active/${product_id}`, null)
     );
   }
+
+  //get Products transactions
+  getProdTrans(product_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(this.url + `/product/getProdTrans/${product_id}`)
+    );
+  }
 }

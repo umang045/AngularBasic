@@ -18,6 +18,7 @@ export class NavbarComponent {
   buttonTxt: any = 'login/signIn';
   role: any;
   isMenuOpen = false;
+  userId : any;
 
   ngOnInit() {
     // localStorage.getItem('')
@@ -32,6 +33,7 @@ export class NavbarComponent {
     this.userLocalDetail = localStorage.getItem('userDetail');
     const jsonData = JSON.parse(this.userLocalDetail);
     this.role = jsonData?.role;
+    this.userId = jsonData?.id;
     console.log(this.role);
     console.log(this.userLocalDetail);
   }

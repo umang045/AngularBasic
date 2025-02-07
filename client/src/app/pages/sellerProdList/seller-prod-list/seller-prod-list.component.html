@@ -10,6 +10,7 @@
     [nzData]="sellerData"
     [nzNoResult]="noDataTemplate"
     [nzShowPagination]="false"
+    class="text-center"
   >
     <thead>
       <tr>
@@ -20,6 +21,7 @@
         <th nzWidth="10%">Stock</th>
         <th nzWidth="10%">Status</th>
         <th nzWidth="20%">Action</th>
+        <th nzWidth="5%">Transaction</th>
       </tr>
     </thead>
     <tbody *ngIf="sellerData.length > 0; else noDataTemplate">
@@ -52,6 +54,7 @@
             (change)="changeStatus(data?.product_id)"
           >
           </mat-slide-toggle>
+          <!-- <nz-switch ></nz-switch> -->
         </td>
         <td>
           <button>
@@ -70,6 +73,17 @@
               nzTheme="outline"
               style="color: red"
             ></nz-icon>
+          </button>
+        </td>
+        <td>
+          <button>
+            <i
+              nz-icon
+              nzType="eye"
+              nzTheme="outline"
+              style="color: blue; cursor: pointer"
+              [routerLink]="['/seller/prodList', data?.product_id]"
+            ></i>
           </button>
         </td>
       </tr>

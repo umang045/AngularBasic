@@ -1,0 +1,79 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">My Orders</h1>
+  <nz-table #sortTable [nzData]="orderData" nzTableLayout="fixed">
+    <thead>
+      <tr>
+        <ng-container>
+          <th class="py-2 px-4">Order ID</th>
+          <th class="py-2 px-4">Order Date</th>
+          <th class="py-2 px-4">Price</th>
+          <th class="py-2 px-4">Status</th>
+          <th class="py-2 px-4">Action</th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of sortTable.data; trackBy: orderData?.order_id">
+        <td class="py-2 px-4">{{ data.order_id }}</td>
+        <td class="py-2 px-4">{{ data.order_date | date : "short" }}</td>
+        <td class="py-2 px-4">{{ data.amount }}</td>
+        <td class="py-2 px-4">
+          <p
+            class="inline-block p-1 rounded-md"
+            [ngClass]="{
+              'status-pending': data.status === 'pending',
+              'status-delivered': data.status === 'Delivered',
+              'status-intransit': data.status === 'InTransit',
+              'status-cancelled': data.status === 'Cancelled'
+            }"
+          >
+            {{ data.status }}
+          </p>
+        </td>
+        <td class="py-2 px-4">
+          <i
+            nz-icon
+            nzType="eye"
+            nzTheme="outline"
+            style="color: blue; cursor: pointer"
+            (click)="showModal(data?.order_id)"
+          ></i>
+          <i
+          (click)="cancleUserOrder(data?.order_id)"
+            *ngIf="data.status != 'Delivered' && data.status != 'Cancelled'"
+            nz-icon
+            nzType="delete"
+            nzTheme="outline"
+            style="color: red; cursor: pointer; margin-left: 8px"
+          ></i>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="Your Order Projects"
+    nzFooter=" "
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+  >
+    <ng-container *nzModalContent>
+      <div
+        class="max-w-sm mx-auto p-4 bg-white rounded-lg shadow-lg flex items-center space-x-4"
+        *ngFor="let item of orderProducts"
+      >
+        <img
+          [src]="item?.image"
+          alt="Product Image"
+          class="w-16 h-16 object-cover rounded-md shadow-md"
+       
+        />
+        <div class="flex-1">
+          <div class="text-lg font-semibold">{{ item?.title }}</div>
+          <div class="text-gray-500">${{ item?.Price }}</div>
+          <div class="text-gray-700">Quantity: {{ item?.quantity }}</div>
+        </div>
+      </div>
+    </ng-container>
+  </nz-modal>
+</div>

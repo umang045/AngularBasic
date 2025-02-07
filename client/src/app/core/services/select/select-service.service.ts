@@ -28,4 +28,12 @@ export class SelectServiceService {
       )
     );
   }
+
+  getLocation(lat: any, lng: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      )
+    );
+  }
 }

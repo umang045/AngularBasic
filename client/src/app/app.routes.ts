@@ -14,6 +14,8 @@ import { authGuardGuard } from './core/guards/auth-guard.guard';
 import { AdminAddProdComponent } from './pages/adminAddProd/admin-add-prod/admin-add-prod.component';
 import { AddSellerProdComponent } from './pages/addSellerProd/add-seller-prod/add-seller-prod.component';
 import { SellerProdListComponent } from './pages/sellerProdList/seller-prod-list/seller-prod-list.component';
+import { MyorderComponent } from './pages/myorder/myorder/myorder.component';
+import { ProdTransComponent } from './pages/prodTrans/prod-trans/prod-trans.component';
 
 export const routes: Routes = [
   {
@@ -61,6 +63,11 @@ export const routes: Routes = [
     component: ResetpassComponent,
   },
   {
+    path: 'order/:id',
+    component: MyorderComponent,
+    canActivate: [authGuardGuard],
+  },
+  {
     path: 'seller',
     component: SellerDashBoardComponent,
     children: [
@@ -82,6 +89,11 @@ export const routes: Routes = [
       {
         path: 'prodList',
         component: SellerProdListComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'prodList/:id',
+        component: ProdTransComponent,
         canActivate: [authGuardGuard],
       },
     ],
