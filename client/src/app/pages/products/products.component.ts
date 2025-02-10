@@ -53,6 +53,8 @@ export class ProductsComponent {
       const result = await this.prodService.getAllProd();
       this.dbProduct = result;
       console.log(result);
+
+      console.log(result);
     } catch (error) {
       console.error('something went wrong');
     }

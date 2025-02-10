@@ -16,6 +16,8 @@ import { AddSellerProdComponent } from './pages/addSellerProd/add-seller-prod/ad
 import { SellerProdListComponent } from './pages/sellerProdList/seller-prod-list/seller-prod-list.component';
 import { MyorderComponent } from './pages/myorder/myorder/myorder.component';
 import { ProdTransComponent } from './pages/prodTrans/prod-trans/prod-trans.component';
+import { SellerorderlistComponent } from './pages/sellerorderlist/sellerorderlist/sellerorderlist.component';
+import { SellerSingleOrderComponent } from './pages/sellerSingleOrder/seller-single-order/seller-single-order.component';
 
 export const routes: Routes = [
   {
@@ -89,6 +91,16 @@ export const routes: Routes = [
       {
         path: 'prodList',
         component: SellerProdListComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'orderList',
+        component: SellerorderlistComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'orderList/:order_id',
+        component: SellerSingleOrderComponent,
         canActivate: [authGuardGuard],
       },
       {

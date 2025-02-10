@@ -46,8 +46,8 @@ export class SingleprodComponent {
   ratting: any;
   userId: any;
 
-  selectedSize: any = 'm';
-  selectedColorId: any = 1;
+  selectedSize: any = '';
+  selectedColorId: any = 0;
   qntyty: any = 1;
 
   isAdded = false;
@@ -163,7 +163,7 @@ export class SingleprodComponent {
 
     if (isLogin) {
       try {
-        if (this.selectedSize == '' || this.selectedColorId == '') {
+        if (this.selectedSize == '' || this.selectedColorId == 0) {
           this.tost.info('Please Select Size and Color!!');
         } else {
           const result = await this.authService.addToCart(addCartData);

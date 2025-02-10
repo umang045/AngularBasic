@@ -1,6 +1,6 @@
 <div class="bg-white">
   <h3 class="my-4 text-2xl font-semibold text-gray-700">
-    @if(P_id != undefined) {Add }@else {Update} Product
+    {{ P_id != undefined ? "Add" : "Update" }} Product
   </h3>
   <form
     class="flex flex-col space-y-5"
@@ -13,7 +13,6 @@
       >
       <input
         type="text"
-        [value]="productForm.controls['title'].value"
         formControlName="title"
         id="product-title"
         placeholder="Enter title"
@@ -123,17 +122,65 @@
         [src]="uploadedImgUrl"
         class="w-24 h-24 object-cover rounded-md shadow-md"
       />
-      <!-- <span class="text-red-700" *ngIf="productForm.controls['image'].errors?.['required'] && productForm.controls['image'].touched">
-            This is Required!!
-          </span> -->
     </div>
+    <div class="flex flex-col space-y-1">
+      <label for="product-colors" class="text-sm font-semibold text-gray-500">
+        Product Colors
+      </label>
+      <div class="flex items-center space-x-2">
+        <input
+          [(colorPicker)]="selectedColor"
+          [style.background]="selectedColor"
+          [cpOutputFormat]="'hex'"
+          [value]="selectedColor"
+          (colorPickerChange)="addColor($event)"
+        />
+        <div class="h-10 flex gap-2">
+          <div
+            *ngFor="let item of colors"
+            class="relative w-8 h-8 cursor-pointer mt-2 hover:border-2 border-red-700"
+            [ngStyle]="{ 'background-color': item }"
+            style="border-radius: 50%"
+            (click)="removeColor(item)"
+          >
+            <span
+              class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+              (click)="removeColor(item)"
+            >
+              <nz-icon
+                nzType="delete"
+                nzTheme="outline"
+                class="w-4 h-4 text-white"
+              ></nz-icon>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col space-y-1">
+        <label for="product-sizes" class="text-sm font-semibold text-gray-500">
+          Product Sizes
+        </label>
+        <ng-multiselect-dropdown
+        [placeholder]="'Select Size'"
+        [settings]="dropdownSettings"
+        [data]="sizeOptions"
+        [(ngModel)]="selectedItems"
+        (onSelect)="onSelectSize($event)"
+        (onSelectAll)="onDeSelectSize($event)"
+        (onDeSelect)="onDeSelectSize($event)"
+      >
+      </ng-multiselect-dropdown>
+      </div>
+    </div>
+
     <div>
       <button
         [disabled]="productForm.invalid"
         type="submit"
         class="w-1/4 cursor-pointer px-4 py-2 text-lg font-semibold text-white bg-primary-600 rounded-lg"
       >
-        {{ P_id != undefined ? "Add" : "Update" }}Product
+        {{ P_id != undefined ? "Add" : "Update" }} Product
       </button>
     </div>
   </form>

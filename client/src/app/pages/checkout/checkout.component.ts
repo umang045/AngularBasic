@@ -105,14 +105,14 @@ export class CheckoutComponent {
   }
 
   async paymentSuccessHandler(response: any) {
-    console.log('Payment successful, response:', response);
+    // console.log('Payment successful, response:', response);
 
     try {
       const result = await this.authService.placeOrder({
         payment_method: this.payment_method,
         address_id: this.selectedAddressId,
         user_id: this.userId,
-        payment_status: 'done',
+        payment_status: 'Finished',
       });
       this.toast.success('Order placed successfully!');
       setTimeout(() => {

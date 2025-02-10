@@ -126,4 +126,17 @@ export class AuthservService {
       this.http.post(`${this.url}/user/delUserOrder`, cancleOrdData)
     );
   }
+
+  getAllSellerOrders(seller_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getOrder/${seller_id}`)
+    );
+  }
+
+  getSellerSingleOrder(order_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getSinlgeOrder/${order_id}`)
+    );
+  }
+
 }

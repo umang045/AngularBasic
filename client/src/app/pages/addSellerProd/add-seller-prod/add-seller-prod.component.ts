@@ -1,21 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, NgModule } from '@angular/core';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
+// import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzUploadChangeParam, NzUploadModule } from 'ng-zorro-antd/upload';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { ProdsevService } from '../../../core/services/product/prodsev.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-
+import { NzColorPickerModule } from 'ng-zorro-antd/color-picker';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 @Component({
   selector: 'app-add-seller-prod',
   imports: [
@@ -23,6 +30,11 @@ import { Router } from '@angular/router';
     CommonModule,
     NzSelectModule,
     NzButtonModule,
+    NzRadioModule,
+    FormsModule,
+    NzColorPickerModule,
+    ColorPickerModule,
+    NgMultiSelectDropDownModule,
     NzIconModule,
     NzUploadModule,
     ReactiveFormsModule,
@@ -41,6 +53,9 @@ export class AddSellerProdComponent {
   P_id: any = Number.parseInt(this.route.url.toString().split('/')[3]);
 
   img: any = '';
+  colors: any = [];
+  selectedSizes: string[] = [];
+  selectedColor: string = '#000000';
 
   productForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
@@ -48,20 +63,58 @@ export class AddSellerProdComponent {
     price: new FormControl('', [Validators.required]),
     stock: new FormControl('', [Validators.required]),
     category_id: new FormControl(0, [Validators.required]),
-    size: new FormControl(null),
     image: new FormControl(''),
     seller_id: new FormControl(''),
     product_id: new FormControl(null),
+    colors: new FormControl([]),
+    size: new FormControl([]),
   });
-
+  sizeOptions: any = [];
+  dropdownSettings = {};
+  selectedItems: any = [];
   ngOnInit() {
     this.getUserId();
     this.fetchProdById();
     console.log(this.productForm.controls['seller_id'].value);
     console.log(this.uploadedImgId);
     console.log(this.P_id);
+
+    this.sizeOptions = [
+      { item_id: 1, item_text: 'M' },
+      { item_id: 2, item_text: 'S' },
+      { item_id: 3, item_text: 'L' },
+      { item_id: 4, item_text: 'XL' },
+      { item_id: 5, item_text: 'XXL' },
+    ]; // Options for the sizes dropdown
+
+    this.dropdownSettings = {
+      singleSelection: false, // Allow multiple selection
+      idField: 'item_id', // Field that identifies each item
+      textField: 'item_text', // Field that is displayed in the dropdown
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      allowSearchFilter: true, // Enable search filter
+    };
   }
 
+  onSelectSize(event: any) {
+    this.selectedItems.push(event?.item_text);
+    this.productForm.controls['size'].setValue(this.selectedItems);
+    console.log(this.selectedItems);
+  }
+
+  // Event handler when size is deselected
+  onDeSelectSize(event: any) {
+    // console.log('Deselected Sizes: ', event);
+    this.selectedItems = this.selectedItems.filter(
+      (s: any) => s != event?.item_text
+    );
+    this.productForm.controls['size'].setValue(this.selectedItems);
+    
+  }
+  onColorChange(color: any): void {
+    console.log(color);
+  }
   getUserId() {
     const localData: any = localStorage.getItem('userDetail');
     const id = JSON.parse(localData);
@@ -133,7 +186,8 @@ export class AddSellerProdComponent {
 
   //handle submit form
   async submitProductForm() {
-    // console.log(this.productForm.getRawValue());
+    this.productForm.controls['colors'].setValue(this.colors);
+    console.log(this.productForm.getRawValue());
     try {
       if (!Number.isNaN(this.P_id)) {
         this.productForm.controls['product_id'].setValue(this.P_id);
@@ -149,5 +203,23 @@ export class AddSellerProdComponent {
     } catch (error) {
       this.toast.error('Something Went Wrong');
     }
+  }
+
+  addColor(color: any) {
+    this.selectedColor = color;
+    if (
+      this.selectedColor &&
+      !this.colors.includes(this.selectedColor) &&
+      this.colors.length < 5
+    ) {
+      this.colors.push(this.selectedColor);
+      this.selectedColor = '';
+    }
+    console.log(this.selectedColor);
+    console.log(this.colors);
+  }
+
+  removeColor(color: string) {
+    this.colors = this.colors.filter((c:any) => c !== color);
   }
 }
