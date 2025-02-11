@@ -15,6 +15,7 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-seller-prod-list',
   imports: [

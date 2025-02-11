@@ -18,6 +18,7 @@ import { MyorderComponent } from './pages/myorder/myorder/myorder.component';
 import { ProdTransComponent } from './pages/prodTrans/prod-trans/prod-trans.component';
 import { SellerorderlistComponent } from './pages/sellerorderlist/sellerorderlist/sellerorderlist.component';
 import { SellerSingleOrderComponent } from './pages/sellerSingleOrder/seller-single-order/seller-single-order.component';
+import { SellerHomeComponent } from './pages/sellerHome/seller-home/seller-home.component';
 
 export const routes: Routes = [
   {
@@ -74,8 +75,18 @@ export const routes: Routes = [
     component: SellerDashBoardComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
         path: 'sellerDash',
         component: SellerDashBoardComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'home',
+        component: SellerHomeComponent,
         canActivate: [authGuardGuard],
       },
       {

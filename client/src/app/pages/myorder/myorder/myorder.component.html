@@ -23,7 +23,7 @@
             [ngClass]="{
               'status-pending': data.status === 'pending',
               'status-delivered': data.status === 'Delivered',
-              'status-intransit': data.status === 'InTransit',
+              'status-intransit': data.status === 'Out For Delivery',
               'status-cancelled': data.status === 'Cancelled'
             }"
           >
@@ -39,7 +39,7 @@
             (click)="showModal(data?.order_id)"
           ></i>
           <i
-          (click)="cancleUserOrder(data?.order_id)"
+            (click)="cancleUserOrder(data?.order_id)"
             *ngIf="data.status != 'Delivered' && data.status != 'Cancelled'"
             nz-icon
             nzType="delete"
@@ -66,11 +66,10 @@
           [src]="item?.image"
           alt="Product Image"
           class="w-16 h-16 object-cover rounded-md shadow-md"
-       
         />
         <div class="flex-1">
           <div class="text-lg font-semibold">{{ item?.title }}</div>
-          <div class="text-gray-500">${{ item?.Price }}</div>
+          <div class="text-gray-500">${{ item?.amount }}</div>
           <div class="text-gray-700">Quantity: {{ item?.quantity }}</div>
         </div>
       </div>
