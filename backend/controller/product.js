@@ -219,7 +219,6 @@ const addProduct = async (req, res) => {
         null,
       ]
     );
-<<<<<<< Updated upstream
 
     // console.log(result[0][0][0].prod_id)
     const product_id = result[0][0][0]?.prod_id;
@@ -234,23 +233,6 @@ const addProduct = async (req, res) => {
         stock
       ]
     );
-=======
-    const product_id = result[0][0]?.prod_id;
-    console.log(product_id);
-
-    for (let index = 0; index < colors.length; index++) {
-      const colorResult = db.query(
-        "insert into colors(color_code,product_id) values (?,?)",
-        [colors[index], product_id]
-      );
-    }
-
-    let [transactionResult] = await db.query(
-      "call order_transaction(?,?,?,?,?)",
-      [seller_id, product_id, stock, null,stock]
-    );
-
->>>>>>> Stashed changes
     res.status(200).json({ message: "Product Added SuccesFully..." });
   } catch (error) {
     console.error("Error fetching reviews:", error);
