@@ -199,14 +199,18 @@ const addProduct = async (req, res) => {
     size,
     price,
     stock,
+    colors
   } = req.body;
+
+  console.log(colors);
+
   try {
-    const result = await db.query(
+    const [result] = await db.query(
       "call manageSellerProduct('addProd',?,?,?,?,?,?,?,?,?)",
       [
         category_id,
         seller_id,
-        null,
+        JSON.stringify(size),
         price,
         stock,
         image,
@@ -215,6 +219,7 @@ const addProduct = async (req, res) => {
         null,
       ]
     );
+<<<<<<< Updated upstream
 
     // console.log(result[0][0][0].prod_id)
     const product_id = result[0][0][0]?.prod_id;
@@ -229,6 +234,23 @@ const addProduct = async (req, res) => {
         stock
       ]
     );
+=======
+    const product_id = result[0][0]?.prod_id;
+    console.log(product_id);
+
+    for (let index = 0; index < colors.length; index++) {
+      const colorResult = db.query(
+        "insert into colors(color_code,product_id) values (?,?)",
+        [colors[index], product_id]
+      );
+    }
+
+    let [transactionResult] = await db.query(
+      "call order_transaction(?,?,?,?,?)",
+      [seller_id, product_id, stock, null,stock]
+    );
+
+>>>>>>> Stashed changes
     res.status(200).json({ message: "Product Added SuccesFully..." });
   } catch (error) {
     console.error("Error fetching reviews:", error);
@@ -302,10 +324,10 @@ const getProductsBySellerId = async (req, res) => {
 const toogleProd = async (req, res) => {
   const { product_id } = req.params;
   console.log(product_id);
-  
+
   try {
     const [result, column] = await db.query("call activeProd(?)", [product_id]);
-    res.status(200).json({message : "toogle work"});
+    res.status(200).json({ message: "toogle work" });
   } catch (error) {
     throw new Error(error);
   }
@@ -328,9 +350,59 @@ const searchProd = async (req, res) => {
   }
 };
 
+//get product transaction
+const getProdTrans = async (req, res) => {
+  try {
+    const { product_id } = req.params;
+    console.log(product_id);
+    const [result] = await db.query("call getProductTransaction(?)", [
+      product_id,
+    ]);
+    return res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//get out of stock product
+const getOutOfStockProd = async (req, res) => {
+  const { seller_id } = req.params;
+  try {
+    const [resultSets, feild] = await db.query(
+      "select * from products where seller_id = ? and stock <= 10",
+      [seller_id]
+    );
+    return res.status(200).json(resultSets);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//update product stock
+const updateProdStock = async (req, res) => {
+  const { product_id, stock, user_id } = req.body;
+  try {
+    const [prodResult, feild] = await db.query(
+      "update products set stock = ? where product_id = ? ",
+      [stock, product_id]
+    );
+
+    let [transactionResult] = await db.query(
+      "call order_transaction(?,?,?,?)",
+      [user_id, product_id, stock, null]
+    );
+    return res.status(200).json(prodResult);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   getUsersReview,
+  getProdTrans,
   getAllProduct,
+  getOutOfStockProd,
+  updateProdStock,
   getSingleProd,
   addReview,
   getAllReviewOfProduct,
