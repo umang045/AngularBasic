@@ -22,6 +22,8 @@
     "@angular/platform-browser-dynamic": "^19.1.5",
     "@angular/router": "^19.1.5",
     "@hivegpt/angular": "^0.0.86",
+    "@swimlane/ngx-charts": "^22.0.0-alpha.0",
+    "chart.js": "^4.4.7",
     "igniteui-webcomponents": "^5.2.1",
     "ng-multiselect-dropdown": "^1.0.0",
     "ng-zorro-antd": "^19.0.2",

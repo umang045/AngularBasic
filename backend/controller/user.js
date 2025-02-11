@@ -407,7 +407,7 @@ const placeOrder = async (req, res) => {
         );
 
         let [transactionResult] = await db.query(
-          "call order_transaction(?,?,?,?)",
+          "call order_transaction(?,?,?,?,?)",
           [
             user_id,
             cartResult[0][index].product_id,

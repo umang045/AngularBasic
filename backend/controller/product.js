@@ -215,6 +215,20 @@ const addProduct = async (req, res) => {
         null,
       ]
     );
+
+    // console.log(result[0][0][0].prod_id)
+    const product_id = result[0][0][0]?.prod_id;
+
+    const transactionResult = await db.query(
+      "call order_transaction(?,?,?,?,?)",
+      [
+        seller_id,
+        product_id,
+        stock,
+        null,
+        stock
+      ]
+    );
     res.status(200).json({ message: "Product Added SuccesFully..." });
   } catch (error) {
     console.error("Error fetching reviews:", error);
