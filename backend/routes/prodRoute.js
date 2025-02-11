@@ -14,6 +14,9 @@ const {
   searchProd,
   getUsersReview,
   toogleProd,
+  getProdTrans,
+  getOutOfStockProd,
+  updateProdStock,
 } = require("../controller/product");
 const { upload } = require("../middleware/uploadImg");
 const cloudinary = require("../utils/cloudinary");
@@ -22,7 +25,10 @@ const router = express.Router();
 
 router.get("/", getAllProduct);
 router.get("/:id", getSingleProd);
+router.get("/getProdTrans/:product_id", getProdTrans);
 router.post("/review", addReview);
+router.get("/getOutStockProd/:seller_id", getOutOfStockProd);
+router.post("/updateStock", updateProdStock);
 router.post("/active/:product_id", toogleProd);
 router.get("/review/:id", getAllReviewOfProduct);
 router.delete("/review/del/:review_id", delReview);

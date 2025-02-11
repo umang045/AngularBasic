@@ -145,6 +145,7 @@ const checkProdCart = async (req, res) => {
       "CALL manageCart('findSingleProdInCart',?,?,?,?,?,?)",
       [u_id, p_id, null, null, null, null]
     );
+    console.log(resultSets[0]);
 
     return res.status(200).json(resultSets[0]);
   } catch (error) {
@@ -201,137 +202,6 @@ const updateQuantity = async (req, res) => {
   }
 };
 
-//add Order
-const addOrder = (req, res) => {
-  const { uid, amunt } = req.body;
-  const date = new Date();
-  const qry = "insert into order set ?";
-  const values = {
-    user_id: uid,
-    order_date: moment(date).format("YYYY/MM/DD"),
-    amount: amunt,
-  };
-  db.query(qry, values);
-};
-
-//place order
-const placeOOrder = async (req, res) => {
-  exports.placeOrder = asyncErrorHandler(async (req, res, next) => {
-    /*
-      Notes:
-      get cart data
-      insert in payment
-      insert in orders
-      insert in order_item
-      decrease stock
-      increase total_sell
-      clear cart data
-  */
-    let { payment_method, address_id } = req.body;
-    let user_id = req.user.id;
-    //start transaction
-    await db.query("START TRANSACTION");
-
-    try {
-      //get cart data********************************
-      let [cart_data] = await db.query("select * from cart where user_id=?", [
-        user_id,
-      ]);
-      // console.log(cart_data);
-      if (cart_data.length === 0) {
-        await db.query("ROLLBACK");
-        return res.status(401).send({ result: false, msg: "Cart is Empty!!" });
-      }
-
-      let total_amount = 0,
-        status = "Pending";
-      for (let i = 0; i < cart_data.length; i++) {
-        total_amount += cart_data[i].totalPrice;
-      }
-      //   console.log(total_amount);
-      //   console.log(new Date());
-
-      //insert in payment**************************
-      let [payment] = await db.query("call CREATE_PAYMENT(?,?,?,?,?)", [
-        user_id,
-        total_amount,
-        payment_method,
-        new Date(),
-        status,
-      ]);
-      //   console.log(payment[0][0].payment_id);
-      let payment_id = payment[0][0].payment_id;
-
-      //insert in order****************************
-      let [check] = await db.query("select user_id from address where id=?", [
-        address_id,
-      ]);
-      console.log(check);
-
-      if (check[0].user_id != user_id) {
-        await db.query("ROLLBACK");
-        return res
-          .status(401)
-          .send({ result: false, msg: "Wrong Address Provided!!" });
-      }
-      let [order] = await db.query("call CREATE_ORDER(?,?,?,?)", [
-        user_id,
-        address_id,
-        payment_id,
-        status,
-      ]);
-
-      //   console.log(order[0][0].id);
-      let order_id = order[0][0].id;
-
-      //insert in order_items**********************
-      for (let i = 0; i < cart_data.length; i++) {
-        await db.query("call ADD_ITEMS_TO_ORDER_ITEMS(?,?,?,?)", [
-          order_id,
-          cart_data[i].product_id,
-          cart_data[i].quantity,
-          cart_data[i].price,
-        ]);
-
-        let [stock] = await db.query("select stock from products where id=?", [
-          cart_data[i].product_id,
-        ]);
-
-        // console.log(stock);
-
-        if (stock[0].stock < cart_data[i].quantity) {
-          await db.query("ROLLBACK");
-          return res
-            .status(401)
-            .send({ result: false, msg: "Product Out of Stock!!" });
-        }
-
-        await db.query(
-          "update products set stock=stock-?,total_sell=total_sell+? where id=?",
-          [
-            cart_data[i].quantity,
-            cart_data[i].quantity,
-            cart_data[i].product_id,
-          ]
-        );
-      }
-
-      //clear cart
-      await db.query("delete from cart where user_id=?", [user_id]);
-
-      //commit transaction
-      await db.query("COMMIT");
-
-      res.status(200).send({ result: true });
-    } catch (error) {
-      //rollback transaction
-      await db.query("ROLLBACK");
-      console.log(error);
-      return res.status(401).send({ result: false, msg: "Bad Request" });
-    }
-  });
-};
-
 //place order
 const placeOrder = async (req, res) => {
   const { payment_method, payment_status, address_id, user_id } = req.body;
@@ -358,6 +228,8 @@ const placeOrder = async (req, res) => {
       }
     }
 
+    console.log("total calculate thyo");
+
     //add to order
     const [orderResult] = await db.query("call addOrder (?,?,?,?)", [
       user_id,
@@ -366,11 +238,14 @@ const placeOrder = async (req, res) => {
       Orderstatus,
     ]);
 
+    console.log("order pydo");
+
     const orderId = orderResult[0][0].order_id;
 
     // console.log("Inserted Order ID:", orderId);
 
-    console.log(amount);
+    // console.log(amount);
+    console.log("order ni id lidhi");
 
     //add in payment table
     const [paymentResult] = await db.query("call addPayment(?,?,?,?,?)", [
@@ -380,6 +255,8 @@ const placeOrder = async (req, res) => {
       amount,
       payment_status,
     ]);
+
+    console.log("payment nu kyru");
 
     //add order_items
     for (let index = 0; index < cartResult[0].length; index++) {
@@ -406,19 +283,31 @@ const placeOrder = async (req, res) => {
           ]
         );
 
+        let [prodResult] = await db.query(
+          "select stock from products where product_id =?",
+          [cartResult[0][index].product_id]
+        );
+
+        console.log(prodResult[0]?.stock);
+
         let [transactionResult] = await db.query(
-          "call order_transaction(?,?,?,?)",
+          "call order_transaction(?,?,?,?,?)",
           [
             user_id,
             cartResult[0][index].product_id,
             null,
             cartResult[0][index].quantity,
+            prodResult[0]?.stock
           ]
         );
       }
     }
+    console.log("order item add thy");
 
     await db.query("delete from cart where user_id = ?", [user_id]);
+
+    console.log("cart khali thyu");
+
     return res.json({ message: "order Placed SuccesFully!!" });
   } catch (error) {
     // await db.query("rollback");
@@ -426,10 +315,93 @@ const placeOrder = async (req, res) => {
   }
 };
 
-const cancleOrder = async (req, res) => {
-  const { order_id } = req.params;
-  
+//const get users order
+const getUsersOrder = async (req, res) => {
+  const { user_id } = req.params;
   try {
+    const [resultSets, fields] = await db.query("CALL fetchUserOrders(?)", [
+      user_id,
+    ]);
+    return res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//get users order
+const getUsersOrdersProd = async (req, res) => {
+  const { order_id } = req.params;
+  try {
+    const [resultSets, fields] = await db.query("CALL fetchUsersOrderItem(?)", [
+      order_id,
+    ]);
+    return res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//delete users order
+const delUserOrder = async (req, res) => {
+  const { order_id, status, user_id } = req.body;
+  try {
+    const [stock] = await db.query("call updateOrderStatus(?,?)", [
+      status,
+      order_id,
+    ]);
+
+    const [orderItems] = await db.query(
+      "select * from order_items where order_id = ?",
+      [order_id]
+    );
+
+    for (let index = 0; index < orderItems.length; index++) {
+      const [stock] = await db.query(
+        `update products set stock=stock+? , totalsell = totalsell-?
+        where  product_id = ?`,
+        [
+          orderItems[index]?.quantity,
+          orderItems[index]?.quantity,
+          orderItems[index].product_id,
+        ]
+      );
+
+      let [transactionResult] = await db.query(
+        "call order_transaction(?,?,?,?)",
+        [
+          user_id,
+          orderItems[index].product_id,
+          orderItems[index].quantity,
+          null,
+        ]
+      );
+    }
+
+    return res.status(200).json({ message: "order Canceeled Succesfully" });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//fetch Seller Products
+const fetchSellerOrders = async (req, res) => {
+  const { seller_id } = req.params;
+  try {
+    const [result] = await db.query("call getSellerOrders(?)", [seller_id]);
+    res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//fetch Single products
+const fetchSingleSellerOrders = async (req, res) => {
+  const { order_id } = req.params;
+  try {
+    const [result] = await db.query("call getSingleOrder(?)", [order_id]);
+    res.status(200).json(result);
   } catch (error) {
     throw new Error(error);
   }
@@ -438,12 +410,17 @@ const cancleOrder = async (req, res) => {
 module.exports = {
   // getUser,
   placeOrder,
+  getUsersOrder,
+  fetchSingleSellerOrders,
   addUsersAddress,
+  getUsersOrdersProd,
   checkAddress,
   getAllUsers,
   addToCart,
   getCart,
   removeFromCart,
+  fetchSellerOrders,
+  delUserOrder,
   updateQuantity,
   getUserById,
   fetchUsersAddress,

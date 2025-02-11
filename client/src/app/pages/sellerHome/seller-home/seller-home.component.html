@@ -1,1 +1,117 @@
-<p>seller-home works!</p>
+<div class="container mx-auto p-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- Dashboard Cards -->
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-xl font-semibold">Total Sales</h2>
+      <p class="mt-2 text-3xl">$25,000</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-xl font-semibold">Orders</h2>
+      <p class="mt-2 text-3xl">1,200</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-xl font-semibold">Products</h2>
+      <p class="mt-2 text-3xl">150</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-xl font-semibold">Users</h2>
+      <p class="mt-2 text-3xl">2,500</p>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Sales Overview</h1>
+    <select
+      class="px-4 py-2 border border-gray-300 rounded"
+      (change)="onYearChange($event)"
+    >
+      <option *ngFor="let y of years" [value]="y.name">{{ y.name }}</option>
+    </select>
+  </div>
+
+  <div class="w-full flex items-center justify-center">
+    <ngx-charts-bar-vertical-2d
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="yr"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [legendTitle]="legendTitle"
+      (select)="onSelect($event)"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)"
+    >
+    </ngx-charts-bar-vertical-2d>
+  </div>
+
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <h1 class="text-2xl font-bold">Sales Statistics</h1>
+      <div class="flex w-full">
+        <div class="w-1/2">
+          <ngx-charts-pie-chart
+            [view]="view1"
+            [scheme]="orderColorScheme"
+            [results]="single"
+            [gradient]="gradient"
+            [legend]="showLegend"
+            [legendPosition]="legendPosition"
+            [labels]="showLabels"
+            [doughnut]="isDoughnut"
+            (select)="onSelect($event)"
+            (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)"
+          >
+          </ngx-charts-pie-chart>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-semibold mb-4">Recent Orders</h2>
+      <table class="min-w-full bg-white">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b">Order ID</th>
+            <th class="py-2 px-4 border-b">Customer</th>
+            <th class="py-2 px-4 border-b">Date</th>
+            <th class="py-2 px-4 border-b">Status</th>
+            <th class="py-2 px-4 border-b">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="py-2 px-4 border-b">12345</td>
+            <td class="py-2 px-4 border-b">John Doe</td>
+            <td class="py-2 px-4 border-b">2025-02-10</td>
+            <td class="py-2 px-4 border-b">
+              <span
+                class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
+                >Completed</span
+              >
+            </td>
+            <td class="py-2 px-4 border-b">$150.00</td>
+          </tr>
+          <tr>
+            <td class="py-2 px-4 border-b">12346</td>
+            <td class="py-2 px-4 border-b">Jane Smith</td>
+            <td class="py-2 px-4 border-b">2025-02-09</td>
+            <td class="py-2 px-4 border-b">
+              <span
+                class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs"
+                >Pending</span
+              >
+            </td>
+            <td class="py-2 px-4 border-b">$200.00</td>
+          </tr>
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
