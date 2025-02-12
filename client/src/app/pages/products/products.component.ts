@@ -6,12 +6,21 @@ import { Router } from '@angular/router';
 import { ProdsevService } from '../../core/services/product/prodsev.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxStarsModule } from 'ngx-stars';
-
+import { NzRateModule } from 'ng-zorro-antd/rate';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
-  imports: [NgFor, NgxStarsModule, CommonModule],
+  imports: [
+    NgFor,
+    NgxStarsModule,
+    NzPaginationModule,
+    CommonModule,
+    FormsModule,
+    NzRateModule,
+  ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -23,8 +32,11 @@ export class ProductsComponent {
   route = inject(Router);
   product: any = [];
   dbProduct: any = [];
+  colorData: any = [];
 
   userId: any;
+  currentPage = 1;
+  pageSize = 8;
 
   heartIcons = {
     empty: '../assets/heart-empty.svg',
@@ -36,6 +48,7 @@ export class ProductsComponent {
     this.getAllProducts();
     this.getProducts();
     this.getUserId();
+    this.getAllColors()
   }
 
   async getAllProducts() {
@@ -84,5 +97,24 @@ export class ProductsComponent {
     console.log(rating);
     const rt = Number.parseFloat(rating);
     console.log(typeof rt, rt);
+  }
+
+  onPageChange(pageNum: any) {
+    this.currentPage = pageNum;
+  }
+
+  get paginatedProducts() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.dbProduct.slice(startIndex, endIndex);
+  }
+
+  async getAllColors() {
+    try {
+      const result = await this.prodService.getAllColors();
+      this.colorData = result;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

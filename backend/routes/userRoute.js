@@ -19,14 +19,17 @@ const {
   delUserOrder,
   fetchSellerOrders,
   fetchSingleSellerOrders,
+  totalUsers,
 } = require("../controller/user");
 const { updateProfilePic } = require("../controller/auth");
+const { authMiddleware, isAdmin } = require("../middleware/authMiddleare");
 const router = express.Router();
 
 router.post("/addorder", placeOrder);
 router.post("/delUserOrder", delUserOrder);
 router.post("/addAddress", checkAddress, addUsersAddress);
 router.get("/getAddress/:users_id", fetchUsersAddress);
+router.get("/totalUser", authMiddleware, totalUsers);
 router.get("/getUserOrder/:user_id", getUsersOrder);
 router.get("/getUserOrderProd/:order_id", getUsersOrdersProd);
 router.delete("/delAddress/:address_id", delUsersAddress);

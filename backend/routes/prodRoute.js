@@ -17,13 +17,18 @@ const {
   getProdTrans,
   getOutOfStockProd,
   updateProdStock,
+  getSellerTotalProd,
+  getAllColors,
 } = require("../controller/product");
 const { upload } = require("../middleware/uploadImg");
 const cloudinary = require("../utils/cloudinary");
+const { authMiddleware } = require("../middleware/authMiddleare");
 
 const router = express.Router();
 
+router.get("/getSellerTotalProd", authMiddleware, getSellerTotalProd);
 router.get("/", getAllProduct);
+router.get("/colors", getAllColors);
 router.get("/:id", getSingleProd);
 router.get("/getProdTrans/:product_id", getProdTrans);
 router.post("/review", addReview);

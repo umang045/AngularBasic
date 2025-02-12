@@ -8,11 +8,12 @@ import { CommonModule } from '@angular/common';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-
+import { NzRateModule } from 'ng-zorro-antd/rate';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -22,7 +23,9 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-singleprod',
   imports: [
     NzModalModule,
+    FormsModule,
     NzIconModule,
+    NzRateModule,
     NgxStarsModule,
     CommonModule,
     ReactiveFormsModule,
@@ -56,7 +59,7 @@ export class SingleprodComponent {
 
   reviewForm = new FormGroup({
     review: new FormControl('', [Validators.required]),
-    rating: new FormControl(''),
+    rating: new FormControl(0),
     color_id: new FormControl(''),
   });
 
@@ -68,8 +71,8 @@ export class SingleprodComponent {
     this.getUserId();
     this.fetchUserCart();
     this.getUserReview();
-    console.log(this.reviewForm.controls['color_id'].value);
-    console.log(this.isAdded);
+    // console.log(this.reviewForm.controls['color_id'].value);
+    // console.log(this.isAdded);
   }
 
   async getSingleProducts() {
@@ -132,6 +135,7 @@ export class SingleprodComponent {
       this.reviewForm.reset();
       await this.fetchProductsReviews();
       await this.getUserReview();
+      this.reviewForm.reset();
     } catch (error) {
       this.tost.error('something went wrong!!');
     }

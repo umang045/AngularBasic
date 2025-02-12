@@ -297,7 +297,7 @@ const placeOrder = async (req, res) => {
             cartResult[0][index].product_id,
             null,
             cartResult[0][index].quantity,
-            prodResult[0]?.stock
+            prodResult[0]?.stock,
           ]
         );
       }
@@ -407,10 +407,23 @@ const fetchSingleSellerOrders = async (req, res) => {
   }
 };
 
+//count user
+const totalUsers = async (req, res) => {
+  try {
+    const [users] = await db.query("call countUser()");
+    return res.status(200).json(users[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
 module.exports = {
   // getUser,
   placeOrder,
   getUsersOrder,
+  totalUsers,
   fetchSingleSellerOrders,
   addUsersAddress,
   getUsersOrdersProd,

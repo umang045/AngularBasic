@@ -199,10 +199,10 @@ const addProduct = async (req, res) => {
     size,
     price,
     stock,
-    colors
+    colors,
   } = req.body;
 
-  console.log(colors);
+  // console.log(colors);
 
   try {
     const [result] = await db.query(
@@ -221,17 +221,14 @@ const addProduct = async (req, res) => {
     );
 
     // console.log(result[0][0][0].prod_id)
-    const product_id = result[0][0][0]?.prod_id;
+    // console.log(result[0][0].prod_id)
+    // console.log(result[0][0]?.prod_id);
+
+    const product_id = result[0][0]?.prod_id;
 
     const transactionResult = await db.query(
       "call order_transaction(?,?,?,?,?)",
-      [
-        seller_id,
-        product_id,
-        stock,
-        null,
-        stock
-      ]
+      [seller_id, product_id, stock, null, stock]
     );
     res.status(200).json({ message: "Product Added SuccesFully..." });
   } catch (error) {
@@ -336,7 +333,7 @@ const searchProd = async (req, res) => {
 const getProdTrans = async (req, res) => {
   try {
     const { product_id } = req.params;
-    console.log(product_id);
+    // console.log(product_id);
     const [result] = await db.query("call getProductTransaction(?)", [
       product_id,
     ]);
@@ -379,12 +376,38 @@ const updateProdStock = async (req, res) => {
   }
 };
 
+//get total product of seller
+const getSellerTotalProd = async (req, res) => {
+  const seller_id = req.userId;
+  console.log(seller_id);
+
+  try {
+    const [totalProd] = await db.query(
+      `select count(*) as total from products where seller_id = ${seller_id}`
+    );
+    res.status(200).json(totalProd[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getAllColors = async (req, res) => {
+  try {
+    const colorResult = await db.query("select * from colors limit 20");
+    res.status(200).json(colorResult[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   getUsersReview,
   getProdTrans,
   getAllProduct,
+  getSellerTotalProd,
   getOutOfStockProd,
   updateProdStock,
+  getAllColors,
   getSingleProd,
   addReview,
   getAllReviewOfProduct,

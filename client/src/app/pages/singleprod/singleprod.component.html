@@ -21,7 +21,6 @@
           [src]="singleProd[0]?.image"
           alt=""
         />
-        
       </div>
 
       <div class="mt-6 sm:mt-8 lg:mt-0">
@@ -30,25 +29,26 @@
         >
           {{ singleProd[0]?.title }}
         </h1>
-        <div class="mt-4 sm:items-center sm:gap-4 sm:flex">
+        <div class="mt-4 sm:items-center flex w-full sm:gap-4 sm:flex">
           <p
             class="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white"
           >
             ${{ singleProd[0]?.price }}
           </p>
+        </div>
 
-          <div class="flex items-center gap-2 mt-2 sm:mt-0">
-            <div class="flex items-center gap-1">
-              <ngx-stars [readonly]="false" [size]="20"></ngx-stars>
-            </div>
-
-            <a
-              href="#"
-              class="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
-            >
-              {{ singleProd[0]?.rating?.count }} Reviews
-            </a>
+        <div class="flex items-center gap-2 mt-2 sm:mt-0">
+          <nz-rate [ngModel]="2" nzDisabled></nz-rate>
+          <div class="flex items-center gap-1">
+            <!-- <ngx-stars [readonly]="false" [size]="20"></ngx-stars> -->
           </div>
+
+          <a
+            href="#"
+            class="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
+          >
+            {{ singleProd[0]?.rating?.count }} Reviews
+          </a>
         </div>
 
         <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
@@ -195,11 +195,12 @@
       "
         [formGroup]="reviewForm"
       >
+        <!-- <nz-rate [ngModel]="2" nzDisabled></nz-rate> -->
         <div class="mt-10">
-          <div class="flex items-center justify-between gap-1">
+          <div class="flex items-center justify-between gap-1 dark:text-white">
+            <!-- <nz-rate [ngModel]="3" disabled></nz-rate> -->
             <ngx-stars
               [readonly]="false"
-              [size]="20"
               (ratingOutput)="getRatingValue($event)"
             ></ngx-stars>
             <div>
@@ -207,7 +208,6 @@
                 *ngIf="reviewForm.valid"
                 class="bg-primary-700 hover:bg-primary-800 cursor-pointer rounded-lg p-2"
                 (click)="addReviewOfProduct()"
-                s
               >
                 Add Review
               </button>
@@ -241,13 +241,8 @@
         <div class="dark:text-white bg-gray-800 rounded-lg">
           {{ singleUserReview?.name }}
         </div>
-        <div class="flex items-center gap-1">
-          <ngx-stars
-            [readonly]="true"
-            [size]="20"
-            [initialStars]="singleUserReview?.ratting"
-          ></ngx-stars>
-        </div>
+        <nz-rate [ngModel]="singleUserReview?.ratting" disabled></nz-rate>
+
         <div>
           <p>{{ singleUserReview?.review }}</p>
         </div>
@@ -265,11 +260,7 @@
             {{ item?.name }}
           </div>
           <div class="flex items-center gap-1">
-            <ngx-stars
-              [readonly]="true"
-              [size]="20"
-              [initialStars]="item?.ratting"
-            ></ngx-stars>
+            <nz-rate [ngModel]="item?.ratting" disabled></nz-rate>
           </div>
           <div>
             <p>{{ item?.review }}</p>

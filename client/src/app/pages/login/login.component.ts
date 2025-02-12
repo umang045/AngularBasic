@@ -59,6 +59,8 @@ export class LoginComponent {
     const data = this.loginForm.getRawValue();
     try {
       const result: any = await this.authService.userLogin(data);
+      console.log(result);
+      
       localStorage.setItem(
         'userDetail',
         JSON.stringify({

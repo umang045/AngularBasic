@@ -50,8 +50,12 @@ const loginUser = async (req, res) => {
       const checkPass = bcrypt.compareSync(pass, resultSets[0][0]?.password);
 
       if (!checkPass) return res.status(400).json("Wrong Email or Password");
+      console.log(resultSets[0][0]);
 
-      const token = jwt.sign({ id: resultSets[0][0].id }, "socialsecret");
+      const token = jwt.sign(
+        { id: resultSets[0][0].user_id },
+        process.env.JWT_SECRET
+      );
 
       const { password, ...others } = resultSets[0][0];
 

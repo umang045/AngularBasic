@@ -22,6 +22,7 @@
             class="inline-block p-1 rounded-md"
             [ngClass]="{
               'status-pending': data.status === 'pending',
+              'status-dispatch': data.status === 'Dispatched',
               'status-delivered': data.status === 'Delivered',
               'status-intransit': data.status === 'Out For Delivery',
               'status-cancelled': data.status === 'Cancelled'

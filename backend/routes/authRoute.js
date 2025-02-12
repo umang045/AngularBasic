@@ -12,10 +12,10 @@ const {
 
 const router = express.Router();
 
+router.post("/login", loginUser);
 router.post("/forgot", forgotPass);
 router.put("/updatePass", updatePassword);
 router.post("/register", registerUser);
-router.post("/login", loginUser);
 router.post("/logout", logOut);
 router.patch("/reset/:passwordResetToken", resetPass);
 router.put("/updateProfile", updateUserProfile);

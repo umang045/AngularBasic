@@ -105,4 +105,10 @@ export class ProdsevService {
       this.http.get(this.url + `/product/getProdTrans/${product_id}`)
     );
   }
+
+  getAllColors(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(this.url + `/product/colors`)
+    );
+  }
 }

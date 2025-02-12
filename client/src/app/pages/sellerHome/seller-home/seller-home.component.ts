@@ -114,7 +114,7 @@ export class SellerHomeComponent {
   xAxisLabel: string = 'Months';
   showYAxisLabel: boolean = true;
   yAxisLabel: string = 'Sell';
-  legendTitle: string = 'Years';
+  legendTitle: string = 'Months';
   showLabels: boolean = true;
   isDoughnut: boolean = false;
   legendPosition: any = 'below';
@@ -126,7 +126,6 @@ export class SellerHomeComponent {
   orderColorScheme:any = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
-
 
   constructor() {
     Object.assign(this.yr);
