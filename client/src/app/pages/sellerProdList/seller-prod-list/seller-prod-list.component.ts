@@ -15,6 +15,7 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { FormsModule } from '@angular/forms';
+import { TruncatePipePipe } from '../../../shared/pipe/truncate/truncate-pipe.pipe';
 
 @Component({
   selector: 'app-seller-prod-list',
@@ -22,6 +23,7 @@ import { FormsModule } from '@angular/forms';
     NzModalModule,
     FormsModule,
     NzImageModule,
+    TruncatePipePipe,
     NzSwitchModule,
     MatSlideToggleModule,
     NzSpaceModule,
@@ -39,7 +41,6 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './seller-prod-list.component.html',
   styleUrl: './seller-prod-list.component.css',
 })
-
 export class SellerProdListComponent {
   prodService = inject(ProdsevService);
   router = inject(Router);
@@ -57,7 +58,7 @@ export class SellerProdListComponent {
   isVisible = false;
 
   showModal(image: any): void {
-    console.log(image);
+    // console.log(image);
     this.showImg = image;
     this.isVisible = true;
   }

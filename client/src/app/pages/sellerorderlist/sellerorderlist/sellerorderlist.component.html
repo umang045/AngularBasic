@@ -1,8 +1,53 @@
+<div class="p-4 bg-gray-50 rounded-lg">
+  <div class="flex flex-col lg:flex-row w-full gap-2 mb-4">
+    <h1 class="text-lg font-semibold text-gray-700">Filters</h1>
+
+    <nz-select ngModel="select" (ngModelChange)="handleTimeChange($event)">
+      <nz-option
+        nzValue="select"
+        nzLabel="select time period"
+        [nzDisabled]="true"
+      ></nz-option>
+      <nz-option nzValue="0" nzLabel="Today"></nz-option>
+      <nz-option nzValue="7" nzLabel="Last Week"></nz-option>
+      <nz-option nzValue="30" nzLabel="Last Month"></nz-option>
+    </nz-select>
+
+    <nz-select ngModel="select" (ngModelChange)="handleStatusChange($event)">
+      <nz-option
+        nzValue="select"
+        nzLabel="Select Status"
+        [nzDisabled]="true"
+      ></nz-option>
+      <nz-option nzValue="pending" nzLabel="Pending"></nz-option>
+      <nz-option nzValue="Dispatched" nzLabel="Dispatched"></nz-option>
+      <nz-option nzValue="Delivered" nzLabel="Delivered"></nz-option>
+      <nz-option
+        nzValue="Out For Delivery"
+        nzLabel="Out For Delivery"
+      ></nz-option>
+      <nz-option nzValue="disabled" nzLabel="Cancelled"></nz-option>
+    </nz-select>
+
+    <div class="flex gap-2 items-center">
+      <h1 class="text-lg font-semibold text-gray-700">
+        Change status by event scheduler:
+      </h1>
+      <mat-slide-toggle
+        [checked]="isEventOn"
+        (change)="handleEvent()"
+        class="ml-2"
+      ></mat-slide-toggle>
+    </div>
+    
+  </div>
+</div>
 <nz-table #sortTable [nzData]="orderListData" nzTableLayout="fixed">
   <thead>
     <tr>
       <ng-container>
         <th class="py-2 px-4">Order ID</th>
+        <th class="py-2 px-4">Order Date</th>
         <th class="py-2 px-4">Name</th>
         <th class="py-2 px-4">Price</th>
         <th class="py-2 px-4">Status</th>
@@ -13,6 +58,7 @@
   <tbody>
     <tr *ngFor="let data of sortTable.data; trackBy: orderListData?.order_id">
       <td class="py-2 px-4">{{ data.order_id }}</td>
+      <td class="py-2 px-4">{{ data.order_date | date : "short" }}</td>
       <td class="py-2 px-4">{{ data.name }}</td>
       <td class="py-2 px-4">{{ data.amount }}</td>
       <!-- <td class="py-2 px-4">{{ data.order_date | date : "short" }}</td> -->

@@ -1,0 +1,29 @@
+<nz-table #sortTable [nzData]="sellerReviewData" nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <ng-container>
+        <th class="py-2 px-4">Name</th>
+        <th class="py-2 px-4">rating</th>
+        <th class="py-2 px-4">review</th>
+        <th class="py-2 px-4">Status</th>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let data of sortTable.data; trackBy: sellerReviewData?.review_id"
+    >
+      <td class="py-2 px-4">{{ data?.name }}</td>
+      <td class="py-2 px-4">{{ data?.ratting }}</td>
+      <td class="py-2 px-4">{{ data?.review }}</td>
+      <td class="py-2 px-4">
+        <mat-slide-toggle
+          [checked]="data?.is_active == true"
+          (change)="changeStatus(data?.review_id)"
+        >
+        </mat-slide-toggle>
+      </td>
+      <!-- <td class="py-2 px-4">{{ data?.name }}</td> -->
+    </tr>
+  </tbody>
+</nz-table>

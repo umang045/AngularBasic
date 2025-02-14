@@ -22,6 +22,7 @@
         <th nzWidth="10%">Status</th>
         <th nzWidth="20%">Action</th>
         <th nzWidth="5%">Transaction</th>
+        <th nzWidth="5%">Reviews</th>
       </tr>
     </thead>
     <tbody *ngIf="sellerData.length > 0; else noDataTemplate">
@@ -45,7 +46,7 @@
           </nz-space> -->
         </td>
         <td>{{ data.title }}</td>
-        <td>{{ data.description }}</td>
+        <td>{{ data.description | truncatePipe : 40 }}</td>
         <td>{{ data.price }}</td>
         <td>{{ data.stock }}</td>
         <td class="">
@@ -83,6 +84,17 @@
               nzTheme="outline"
               style="color: blue; cursor: pointer"
               [routerLink]="['/seller/prodList', data?.product_id]"
+            ></i>
+          </button>
+        </td>
+        <td>
+          <button>
+            <i
+              nz-icon
+              nzType="eye"
+              nzTheme="outline"
+              style="color: blue; cursor: pointer"
+              [routerLink]="['/seller/review', data?.product_id]"
             ></i>
           </button>
         </td>

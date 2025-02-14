@@ -417,13 +417,71 @@ const totalUsers = async (req, res) => {
   }
 };
 
+//get orderby status
+const getOrderByStatus = async (req, res) => {
+  const { status } = req.params;
+  const seller_id = req.userId;
 
+  try {
+    const [result] = await db.query("call filterOrdrByStatus(?,?)", [
+      seller_id,
+      status,
+    ]);
+    res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//get orderby status
+const getOrderByDate = async (req, res) => {
+  const { dif } = req.params;
+  const seller_id = req.userId;
+  // console.log(seller_id, dif);
+
+  try {
+    const [result] = await db.query("call filterOrdrByDate(?,?)", [
+      seller_id,
+      dif,
+    ]);
+    res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// on off event schedular
+const onOffEvent = async (req, res) => {
+  try {
+    let [check] = await db.query(
+      "SHOW VARIABLES WHERE VARIABLE_NAME = 'event_scheduler'"
+    );
+    if (check && check.length > 0) {
+      const currentState = check[0].Value;
+      const newState = currentState === "ON" ? "OFF" : "ON";
+      await db.query(`SET GLOBAL event_scheduler = '${newState}'`);
+      [check] = await db.query(
+        "SHOW VARIABLES WHERE VARIABLE_NAME = 'event_scheduler'"
+      );
+      return res.status(200).json({
+        message: `Event scheduler turned ${newState}`,
+        currentState: check[0].Value,
+      });
+    }
+    res.status(200).json(check);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   // getUser,
   placeOrder,
   getUsersOrder,
+  onOffEvent,
+  getOrderByDate,
   totalUsers,
+  getOrderByStatus,
   fetchSingleSellerOrders,
   addUsersAddress,
   getUsersOrdersProd,

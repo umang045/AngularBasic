@@ -20,10 +20,15 @@ const {
   fetchSellerOrders,
   fetchSingleSellerOrders,
   totalUsers,
+  getOrderByStatus,
+  getOrderByDate,
+  onOffEvent,
 } = require("../controller/user");
 const { updateProfilePic } = require("../controller/auth");
 const { authMiddleware, isAdmin } = require("../middleware/authMiddleare");
 const router = express.Router();
+
+router.get("/seller/filterOrder/time/:dif", authMiddleware, getOrderByDate);
 
 router.post("/addorder", placeOrder);
 router.post("/delUserOrder", delUserOrder);
@@ -44,6 +49,8 @@ router.delete("/delCart/:id", removeFromCart);
 router.put("/updtQnty", updateQuantity);
 
 router.get("/seller/getOrder/:seller_id", fetchSellerOrders);
+router.get("/seller/filterOrder/status/:status", authMiddleware, getOrderByStatus);
+router.post("/seller/onoffschedule", authMiddleware, onOffEvent);
 router.get("/seller/getSinlgeOrder/:order_id", fetchSingleSellerOrders);
 
 module.exports = router;

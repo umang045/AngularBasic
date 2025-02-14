@@ -119,7 +119,7 @@ const getUsersReview = async (req, res, next) => {
   const { productId, userId } = req.body;
   try {
     const qry =
-      "SELECT users.name, reviews.* FROM reviews JOIN users ON reviews.user_id = users.user_id 	WHERE reviews.product_id = ? and reviews.user_id = ?;";
+      "SELECT users.name, reviews.* FROM reviews JOIN users ON reviews.user_id = users.user_id 	WHERE reviews.product_id = ? and reviews.user_id = ? and reviews.is_active = true";
     const [resultSets, fields] = await db.query(qry, [productId, userId]);
     return res.status(200).json(resultSets[0]);
   } catch (error) {
@@ -391,6 +391,7 @@ const getSellerTotalProd = async (req, res) => {
   }
 };
 
+//get all colors
 const getAllColors = async (req, res) => {
   try {
     const colorResult = await db.query("select * from colors limit 20");
@@ -400,11 +401,94 @@ const getAllColors = async (req, res) => {
   }
 };
 
+//const filter products
+const getFilteredProducts = async (req, res) => {
+  const {
+    selected_category_id = null,
+    min_price = null,
+    max_price = null,
+    selected_color_id = null,
+    sort_option = "latest",
+  } = req.query;
+  try {
+    const [rows] = await db.query("CALL filterProd(?, ?, ?, ?, ?)", [
+      selected_category_id,
+      min_price,
+      max_price,
+      selected_color_id,
+      sort_option,
+    ]);
+    res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+};
+
+//get all product category
+const getAllCategory = async (req, res) => {
+  try {
+    const [category] = await db.query("select * from product_category");
+    res.status(200).json(category);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//get min max price
+const getMinMaxPrice = async (req, res) => {
+  try {
+    const [minmaxPrice] = await db.query(
+      "select min(price) as minPrice , max(price) as maxPrice from products where is_active = true"
+    );
+    res.status(200).json(minmaxPrice);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//get single product review
+const getSingleProdRview = async (req, res) => {
+  const { product_id } = req.params;
+  // console.log(product_id);
+
+  try {
+    const [result] = await db.query(
+      "select r.* , u.name from reviews r join users u on u.user_id = r.user_id where product_id = ?",
+      [product_id]
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//delete single reviews
+const toogleSingleReview = async (req, res) => {
+  const { review_id } = req.params;
+  console.log(review_id);
+
+  try {
+    const [result] = await db.query(
+      "update reviews set is_active = !is_active where review_id = ?",
+      [review_id]
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   getUsersReview,
+  getSingleProdRview,
+  getFilteredProducts,
+  getAllCategory,
+  getMinMaxPrice,
   getProdTrans,
   getAllProduct,
   getSellerTotalProd,
+  toogleSingleReview,
   getOutOfStockProd,
   updateProdStock,
   getAllColors,

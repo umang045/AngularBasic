@@ -6,12 +6,16 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 @Component({
   selector: 'app-myorder',
   imports: [
     CommonModule,
+    NzTimelineModule,
     NzTableModule,
     NzModalModule,
+    NzDrawerModule,
     NzIconModule,
     NzPaginationModule,
   ],
@@ -25,9 +29,16 @@ export class MyorderComponent {
   orderProducts: any = [];
   tost = inject(ToastrService);
 
+  size: any = 'large';
+  selectedOrderStatus: any;
+
   ngOnInit() {
     this.getUserId();
     this.getUserOrderData();
+  }
+
+  close(): void {
+    this.isVisible = false;
   }
 
   getUserId() {
@@ -78,8 +89,25 @@ export class MyorderComponent {
   isVisible = false;
 
   showModal(order_id: any): void {
-    this.isVisible = true;
+    const order = this.orderData.find((o: any) => o.order_id === order_id);
+    if (order) {
+      this.orderProducts = order.products;
+      this.selectedOrderStatus = order.status;
+      this.isVisible = true;
+    }
     this.getUserOrderProdData(order_id);
+  }
+
+  getTimelineItems(): any[] {
+    const stages = [
+      { status: 'pending', label: 'Pending', color: 'yellow-400' },
+      { status: 'Dispatched', label: 'Dispatched', color: 'blue-300' },
+      { status: 'Out For Delivery', label: 'Out for Delivery', color: 'gray-500' },
+      { status: 'Delivered', label: 'Delivered', color: 'green-300' },
+      { status: 'Cancelled', label: 'Cancelled', color: 'red-400' }
+    ];
+    const currentIndex = stages.findIndex(stage => stage.status === this.selectedOrderStatus);
+    return stages.slice(0, currentIndex + 1);
   }
 
   handleOk(): void {

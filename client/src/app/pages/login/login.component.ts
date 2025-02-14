@@ -28,7 +28,6 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-
 export class LoginComponent {
   formBuilder = inject(FormBuilder);
   authService = inject(AuthservService);
@@ -60,7 +59,7 @@ export class LoginComponent {
     try {
       const result: any = await this.authService.userLogin(data);
       console.log(result);
-      
+
       localStorage.setItem(
         'userDetail',
         JSON.stringify({
@@ -69,6 +68,7 @@ export class LoginComponent {
           token: result?.token,
         })
       );
+      localStorage.setItem('token', result?.token);
       this.tost.success('Login Successfully!');
       this.router.navigateByUrl('/home');
     } catch (error) {
@@ -91,6 +91,6 @@ export class LoginComponent {
   getUserRole() {
     const localData: any = localStorage.getItem('userDetail');
     const id = JSON.parse(localData);
-    console.log(id , localData);
+    console.log(id, localData);
   }
 }

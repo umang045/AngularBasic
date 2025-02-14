@@ -19,6 +19,7 @@ import { ProdTransComponent } from './pages/prodTrans/prod-trans/prod-trans.comp
 import { SellerorderlistComponent } from './pages/sellerorderlist/sellerorderlist/sellerorderlist.component';
 import { SellerSingleOrderComponent } from './pages/sellerSingleOrder/seller-single-order/seller-single-order.component';
 import { SellerHomeComponent } from './pages/sellerHome/seller-home/seller-home.component';
+import { ReviewListComponent } from './pages/reviewList/review-list/review-list.component';
 
 export const routes: Routes = [
   {
@@ -117,6 +118,11 @@ export const routes: Routes = [
       {
         path: 'prodList/:id',
         component: ProdTransComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'review/:id',
+        component: ReviewListComponent,
         canActivate: [authGuardGuard],
       },
     ],

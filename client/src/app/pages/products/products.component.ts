@@ -10,16 +10,22 @@ import { NzRateModule } from 'ng-zorro-antd/rate';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { TruncatePipePipe } from '../../shared/pipe/truncate/truncate-pipe.pipe';
+import { NzResultModule } from 'ng-zorro-antd/result';
 
 @Component({
   selector: 'app-products',
   imports: [
     NgFor,
     NgxStarsModule,
+    NzResultModule,
+    TruncatePipePipe,
     NzPaginationModule,
     CommonModule,
     FormsModule,
     NzRateModule,
+    NzSliderModule,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
@@ -33,10 +39,20 @@ export class ProductsComponent {
   product: any = [];
   dbProduct: any = [];
   colorData: any = [];
+  categoriesData: any = [];
 
   userId: any;
   currentPage = 1;
   pageSize = 8;
+
+  dbMinVal: number = 0;
+  dbMaxVal: number = 0;
+
+  selectedCategoryId: number | null = null;
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  selectedColorId: number | null = null;
+  sortOption: any = null;
 
   heartIcons = {
     empty: '../assets/heart-empty.svg',
@@ -48,7 +64,10 @@ export class ProductsComponent {
     this.getAllProducts();
     this.getProducts();
     this.getUserId();
-    this.getAllColors()
+    this.getAllColors();
+    this.getAllCategory();
+    this.getPrice();
+    this.getFilterProducts();
   }
 
   async getAllProducts() {
@@ -116,5 +135,73 @@ export class ProductsComponent {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async getAllCategory() {
+    try {
+      const result = await this.prodService.getAllCategory();
+      this.categoriesData = result;
+      // console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getPrice() {
+    try {
+      const result = await this.prodService.getPrice();
+      this.dbMinVal = result[0]?.minPrice;
+      this.dbMaxVal = result[0]?.maxPrice;
+      // console.log(this.minPrice, this.maxPrice);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getFilterProducts() {
+    try {
+      const result = await this.prodService.getFiltersProduct(
+        this.selectedCategoryId,
+        this.minPrice,
+        this.maxPrice,
+        this.selectedColorId,
+        this.sortOption
+      );
+      this.dbProduct = result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async handlePriceChange(event: any) {
+    // console.log(event?.target?.value);
+    console.log(event);
+    const inputValue = event;
+    this.minPrice = inputValue;
+    await this.getFilterProducts();
+  }
+
+  async handleColorChange(colorId: any) {
+    this.selectedColorId == colorId
+      ? (this.selectedColorId = null)
+      : (this.selectedColorId = colorId);
+    await this.getFilterProducts();
+  }
+
+  async handleCategory(categoryId: any) {
+    this.selectedCategoryId == categoryId
+      ? (this.selectedCategoryId = null)
+      : (this.selectedCategoryId = categoryId);
+    await this.getFilterProducts();
+
+    // console.log(this.selectedCategoryId);
+  }
+
+  async handleSortFilter(event: any) {
+    // console.log(event?.target?.value);
+    const sortVal = event?.target?.value;
+    this.sortOption = sortVal;
+    await this.getFilterProducts();
+    // console.log(this.sortOption);
   }
 }

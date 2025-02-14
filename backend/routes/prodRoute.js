@@ -19,6 +19,11 @@ const {
   updateProdStock,
   getSellerTotalProd,
   getAllColors,
+  getFilteredProducts,
+  getAllCategory,
+  getMinMaxPrice,
+  getSingleProdRview,
+  toogleSingleReview,
 } = require("../controller/product");
 const { upload } = require("../middleware/uploadImg");
 const cloudinary = require("../utils/cloudinary");
@@ -28,6 +33,11 @@ const router = express.Router();
 
 router.get("/getSellerTotalProd", authMiddleware, getSellerTotalProd);
 router.get("/", getAllProduct);
+router.get("/filter", getFilteredProducts);
+router.get("/price", getMinMaxPrice);
+router.get("/allReviews/:product_id", getSingleProdRview);
+router.put("/toogleReview/:review_id", toogleSingleReview);
+router.get("/category", getAllCategory);
 router.get("/colors", getAllColors);
 router.get("/:id", getSingleProd);
 router.get("/getProdTrans/:product_id", getProdTrans);

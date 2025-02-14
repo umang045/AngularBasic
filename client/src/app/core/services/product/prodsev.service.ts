@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
@@ -107,8 +107,55 @@ export class ProdsevService {
   }
 
   getAllColors(): Promise<any> {
+    return lastValueFrom(this.http.get(this.url + `/product/colors`));
+  }
+
+  getAllCategory(): Promise<any> {
+    return lastValueFrom(this.http.get(this.url + `/product/category`));
+  }
+
+  getPrice(): Promise<any> {
+    return lastValueFrom(this.http.get(this.url + `/product/price`));
+  }
+
+  getFiltersProduct(
+    selectedCategoryId: number | null,
+    minPrice: number | null,
+    maxPrice: number | null,
+    selectedColorId: number | null,
+    sortOption: string
+  ): Promise<any> {
+    let params = new HttpParams();
+    if (selectedCategoryId !== null) {
+      params = params.set(
+        'selected_category_id',
+        selectedCategoryId.toString()
+      );
+    }
+    if (minPrice !== null) {
+      params = params.set('min_price', minPrice.toString());
+    }
+    if (maxPrice !== null) {
+      params = params.set('max_price', maxPrice.toString());
+    }
+    if (selectedColorId !== null) {
+      params = params.set('selected_color_id', selectedColorId.toString());
+    }
+    params = params.set('sort_option', sortOption);
     return lastValueFrom(
-      this.http.get(this.url + `/product/colors`)
+      this.http.get<any>(this.url + `/product/filter`, { params })
+    );
+  }
+
+  getReviwListSellr(review_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.get(this.url + `/product/allReviews/${review_id}`)
+    );
+  }
+
+  toogleReview(review_id: any): Promise<any> {
+    return lastValueFrom(
+      this.http.put(this.url + `/product/toogleReview/${review_id}`, null)
     );
   }
 }

@@ -18,11 +18,13 @@
           class="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 sm:w-auto"
           name="account"
           id=""
+          (change)="handleSortFilter($event)"
         >
-          <option value="account">Sort</option>
-          <option value="favourite">Newest</option>
-          <option value="order">Increasing Price</option>
-          <option value="order">Descreasing Price</option>
+          <option value="" disabled selected>Sort</option>
+          <option value="latest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="price_asc">Increasing Price</option>
+          <option value="price_desc">Descreasing Price</option>
         </select>
       </div>
     </div>
@@ -42,19 +44,16 @@
           </h3>
           <div class="flex w-full items-center gap-1 justify-between">
             <button
+              *ngFor="let item of categoriesData"
               class="mt-2 block w-1/3 rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700"
+              [ngClass]="{
+                'bg-blue-700 border-2':
+                  selectedCategoryId === item?.category_id,
+                'bg-blue-500': selectedCategoryId !== item?.category_id
+              }"
+              (click)="handleCategory(item?.category_id)"
             >
-              Men's
-            </button>
-            <button
-              class="mt-2 block w-1/3 rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700"
-            >
-              Women's
-            </button>
-            <button
-              class="mt-2 block w-1/3 rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700"
-            >
-              Kids
+              {{ item?.category_name }}
             </button>
           </div>
         </div>
@@ -62,28 +61,28 @@
           <h3 class="text-lg font-medium text-gray-900 dark:text-white">
             Price
           </h3>
-          <input
-            type="range"
-            min="0"
-            max="1000"
-            value="500"
-            class="w-full mt-2"
-          />
+          <nz-slider
+            [(ngModel)]="minPrice"
+            [nzMin]="dbMinVal"
+            [nzMax]="dbMaxVal"
+            [nzDisabled]="false"
+            (ngModelChange)="handlePriceChange($event)"
+          ></nz-slider>
           <div
             class="mt-2 flex justify-between text-sm text-gray-500 dark:text-gray-400"
           >
-            <span>$0</span>
-            <span>$1000</span>
+            <span>${{ dbMinVal }}</span>
+            <span>${{ dbMaxVal }}</span>
           </div>
         </div>
         <div class="mt-4">
           <h3 class="text-lg font-medium text-gray-900 dark:text-white">
             Colors
           </h3>
-          <!-- <div
+
+          <div class="flex gap-1 flex-wrap">
+            <button
               *ngFor="let item of colorData"
-              (click)="addColor(item?.color_id)"
-              class="w-8 h-8 cursor-pointer mt-2 hover:border-2 border-red-700"
               [ngStyle]="
                 selectedColorId == item.color_id
                   ? {
@@ -92,15 +91,10 @@
                     }
                   : { 'background-color': item?.color_code }
               "
-              style="border-radius: 50%"
-            ></div> -->
-          <div class="flex gap-1 flex-wrap">
-            <div
-              *ngFor="let item of colorData"
-              [ngStyle]="{ 'background-color': item?.color_code }"
+              (click)="handleColorChange(item?.color_id)"
               class="w-8 h-8 cursor-pointer mt-2 hover:border-2 border-red-700 bg-white"
               style="border-radius: 50%"
-            ></div>
+            ></button>
           </div>
 
           <div
@@ -109,7 +103,14 @@
         </div>
         <!-- Add more filter options as needed -->
       </div>
-
+      <nz-result
+        class="absolute top-1/3 right-1/2 left-1/2 dark:text-white"
+        nzStatus="404"
+        nzTitle="404"
+        nzSubTitle="Sorry, No product Found"
+        *ngIf="dbProduct.length === 0"
+      >
+      </nz-result>
       <!-- gird vara product no code -->
       <div
         class="col-span-3 mb-4 grid gap-2 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4"
@@ -147,13 +148,13 @@
               href="#"
               class="text-sm font-semibold leading-tight text-gray-900 hover:underline dark:text-white"
             >
-              {{ item?.title }}
+              {{ item?.title | truncatePipe : 20 }}
             </a>
 
             <div class="mt-2 flex items-center gap-2">
               <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
                 <!-- {{ item?.rating?.count }} -->
-                <nz-rate [ngModel]="item?.avg_rating" nzDisabled></nz-rate>
+                <nz-rate [ngModel]="3" nzDisabled></nz-rate>
               </p>
             </div>
 
@@ -170,7 +171,7 @@
     </div>
 
     <!-- pagination code -->
-    <div class="w-full text-center">
+    <div class="w-full text-center" *ngIf="dbProduct.length != 0">
       <button
         type="button"
         class="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
