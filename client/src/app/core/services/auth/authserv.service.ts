@@ -121,24 +121,28 @@ export class AuthservService {
     );
   }
 
+  //place order
   placeOrder(orderData: any): Promise<any> {
     return lastValueFrom(
       this.http.post(`${this.url}/user/addorder`, orderData)
     );
   }
 
+  //get users order
   getUsersOrde(user_id: any): Promise<any> {
     return lastValueFrom(
       this.http.get(`${this.url}/user/getUserOrder/${user_id}`)
     );
   }
 
+  //get orders product
   getUsersOrderProd(order_id: any): Promise<any> {
     return lastValueFrom(
       this.http.get(`${this.url}/user/getUserOrderProd/${order_id}`)
     );
   }
 
+  //cancle orders
   cancleUserOrder(cancleOrdData: any): Promise<any> {
     return lastValueFrom(
       this.http.post(`${this.url}/user/delUserOrder`, cancleOrdData)
@@ -173,5 +177,71 @@ export class AuthservService {
     return lastValueFrom(
       this.http.post(`${this.url}/user/seller/onoffschedule`, null)
     );
+  }
+
+  getSellerOrdersStatusCount(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getOrderStatusCount`)
+    );
+  }
+
+  getSellersYearWiseSell(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getSellersTotalSells`)
+    );
+  }
+
+  getAllUsersForAdmin(): Promise<any> {
+    return lastValueFrom(this.http.get(`${this.url}/user/find/all`));
+  }
+
+  getCountedTotalUsers(): Promise<any> {
+    return lastValueFrom(this.http.get(`${this.url}/user/totalUser`));
+  }
+
+  getCountedSellersProd(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getAllProdCount`)
+    );
+  }
+
+  getCountedSellOfSeller(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getAllSellCount`)
+    );
+  }
+
+  getCountSellrOrder(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/seller/getAllOrderCount`)
+    );
+  }
+
+  getAllOrderForAdmin(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/admin/getAllOrderCountForAdmin`)
+    );
+  }
+
+  getAllProdForAdmin(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/admin/getAllProdCountForAdmin`)
+    );
+  }
+
+  getAllSellForAdmin(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/admin/getAllAmountCountForAdmin`)
+    );
+  }
+
+  getOrderStatusCountForAdmin(): Promise<any> {
+    return lastValueFrom(
+      this.http.get(`${this.url}/user/admin/getStatusCount`)
+    );
+  }
+
+  getAllUserForSuperAdmin(): Promise<any> {
+    return lastValueFrom(this.http.get(`${this.url}/user/find/all`));
   }
 }

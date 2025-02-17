@@ -1,0 +1,24 @@
+<div
+  class="bg-gray-800 text-white rounded p-4 cursor-pointer hover:-translate-y-1 transition-all relative"
+  [routerLink]="['/product/', productData?.product_id]"
+>
+  <div class="mb-4 bg-gray-100 rounded p-2">
+    <img
+      [src]="productData?.image"
+      alt="Product 2"
+      class="aspect-[33/35] w-full object-contain"
+    />
+  </div>
+
+  <div class="text-white">
+    <div class="flex gap-2">
+      <h5 class="font-bold text-white">
+        {{ productData?.title | truncatePipe : 10 }}
+      </h5>
+      <h6 class="font-bold ml-auto text-white">${{ productData?.price }}</h6>
+    </div>
+    <p class="mt-2">
+      {{ productData?.description | truncatePipe : 20 }}
+    </p>
+  </div>
+</div>

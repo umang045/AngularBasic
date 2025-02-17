@@ -20,6 +20,8 @@ import { SellerorderlistComponent } from './pages/sellerorderlist/sellerorderlis
 import { SellerSingleOrderComponent } from './pages/sellerSingleOrder/seller-single-order/seller-single-order.component';
 import { SellerHomeComponent } from './pages/sellerHome/seller-home/seller-home.component';
 import { ReviewListComponent } from './pages/reviewList/review-list/review-list.component';
+import { AdminHomeComponent } from './pages/adminHome/admin-home/admin-home.component';
+import { UserListComponent } from './pages/userList/user-list/user-list.component';
 
 export const routes: Routes = [
   {
@@ -131,6 +133,21 @@ export const routes: Routes = [
     path: 'superadmin',
     component: AdminDashBoardComponent,
     children: [
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
+        path: 'home',
+        component: AdminHomeComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'userList',
+        component: UserListComponent,
+        canActivate: [authGuardGuard],
+      },
       {
         path: 'adminDash',
         component: AdminDashBoardComponent,

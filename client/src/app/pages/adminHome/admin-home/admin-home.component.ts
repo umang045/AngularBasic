@@ -1,20 +1,22 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AuthservService } from '../../../core/services/auth/authserv.service';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-seller-home',
-  imports: [CommonModule, NgxChartsModule],
-  templateUrl: './seller-home.component.html',
-  styleUrl: './seller-home.component.css',
+  selector: 'app-admin-home',
+  imports: [NgxChartsModule, CommonModule],
+  templateUrl: './admin-home.component.html',
+  styleUrl: './admin-home.component.css',
 })
-export class SellerHomeComponent {
+export class AdminHomeComponent {
   authService = inject(AuthservService);
-  totalUsers: any;
-  sellersTotalOrder: any = 0;
-  sellersTotalProd: any = 0;
-  sellersTotalSell: any = 0;
+  totalUser: any;
+  adminTotalOrder: any = 0;
+  adminTotalSell: any = 0;
+  adminTotalProducts: any = 0;
+
+
 
   yr = [
     {
@@ -130,9 +132,9 @@ export class SellerHomeComponent {
     this.getTotalSell();
     this.getStausOfOrders();
     this.fetchTotalUser();
-    this.fetchTotalSellOfSeller();
-    this.fetchTotalOrderOfSeller();
-    this.fetchTotalProductOfSeller();
+    this.fetchTotalOrderForAdmin();
+    this.fetchTotalProdForAdmin();
+    this.fetchTotalSellForAdmin();
   }
 
   onSelect(data: any): void {
@@ -160,7 +162,7 @@ export class SellerHomeComponent {
 
   async getStausOfOrders() {
     try {
-      const result = await this.authService.getSellerOrdersStatusCount();
+      const result = await this.authService.getOrderStatusCountForAdmin();
       this.single = result.map((item: any) => ({
         name: item.status,
         value: item.count,
@@ -190,40 +192,33 @@ export class SellerHomeComponent {
   async fetchTotalUser() {
     try {
       const result = await this.authService.getCountedTotalUsers();
-      this.totalUsers = result[0]?.totalusers;
-      // console.log(this.totalUsers);
+      this.totalUser = result[0]?.totalusers;
     } catch (error) {
       console.log(error);
     }
   }
-
-  async fetchTotalSellOfSeller() {
+  async fetchTotalOrderForAdmin() {
     try {
-      const result = await this.authService.getCountedSellOfSeller();
-      this.sellersTotalSell = result?.totalSellerSell;
-      // console.log(this.sellersTotalSell, result);
-
-      // console.log(result);
+      const result = await this.authService.getAllOrderForAdmin();
+      this.adminTotalOrder = result?.totalSellersOrder;
+      // console.log(result?.totalSellersOrder);
     } catch (error) {
       console.log(error);
     }
   }
-
-  async fetchTotalOrderOfSeller() {
+  async fetchTotalSellForAdmin() {
     try {
-      const result = await this.authService.getCountSellrOrder();
-      this.sellersTotalOrder = result?.totalSellersOrder;
-      // console.log(result);
+      const result = await this.authService.getAllSellForAdmin();
+      this.adminTotalSell = result?.totalSellerSell;
+      console.log(result?.totalSellerSell);
     } catch (error) {
       console.log(error);
     }
   }
-  
-  async fetchTotalProductOfSeller() {
+  async fetchTotalProdForAdmin() {
     try {
-      const result = await this.authService.getCountedSellersProd();
-      this.sellersTotalProd = result?.totalSellerProd;
-      // console.log(result);
+      const result = await this.authService.getAllProdForAdmin();
+      this.adminTotalProducts = result?.totalSellerProd;
     } catch (error) {
       console.log(error);
     }
