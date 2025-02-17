@@ -21,8 +21,8 @@ const getAllUsers = async (req, res) => {
   try {
     const [resultSets, fields] = await db.query("CALL getusr()");
 
-    const users = resultSets[0];
-    res.status(200).json(users);
+    // const users = resultSets[0];
+    res.status(200).json(resultSets);
   } catch (error) {
     console.error("Error fetching users:", error.message);
     res.status(500).send("Internal Server Error");
@@ -205,7 +205,9 @@ const updateQuantity = async (req, res) => {
 //place order
 const placeOrder = async (req, res) => {
   const { payment_method, payment_status, address_id, user_id } = req.body;
+  const seller_id = req.userId;
   // console.log(payment_method, address_id, user_id);
+  console.log(seller_id);
 
   try {
     //get cart
@@ -231,8 +233,9 @@ const placeOrder = async (req, res) => {
     console.log("total calculate thyo");
 
     //add to order
-    const [orderResult] = await db.query("call addOrder (?,?,?,?)", [
+    const [orderResult] = await db.query("call addOrder (?,?,?,?,?)", [
       user_id,
+      seller_id,
       address_id,
       amount,
       Orderstatus,
@@ -474,14 +477,154 @@ const onOffEvent = async (req, res) => {
   }
 };
 
+// get status orders
+const getStatusCount = async (req, res) => {
+  const seller_id = req.userId;
+  // console.log(seller_id);
+  try {
+    const [result] = await db.query("call getOrderStatusCount(?)", [seller_id]);
+    res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getStatusCountForAdmin = async (req, res) => {
+  // const seller_id = req.userId;
+  // console.log(seller_id);
+  try {
+    const [result] = await db.query("call fetchOrderStatusForAdmin()");
+    res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//get year wise sell
+const getYearWiseSell = async (req, res) => {
+  const seller_id = req.userId;
+  try {
+    const [result] = await db.query("call getYearWiseSell(?)", [seller_id]);
+    res.status(200).json(result[0]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//count sellers product for admin
+const getSellerAllProductCount = async (req, res) => {
+  const seller_id = req.userId;
+  try {
+    const [resultSets, fields] = await db.query(
+      "select count(*) as totalSellerProd from products where seller_id =?",
+      [seller_id]
+    );
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//count sellers orders from admin dashboard
+const getSellersOrderCount = async (req, res) => {
+  const seller_id = req.userId;
+  try {
+    const [resultSets, fields] = await db.query(
+      "select count(*) as totalSellersOrder from orders where seller_id =?",
+      [seller_id]
+    );
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//get sellers totalSell for admin
+const getSellersAmountCount = async (req, res) => {
+  const seller_id = req.userId;
+  try {
+    const [resultSets, fields] = await db.query(
+      "select sum(amount) as totalSellerSell from orders where seller_id =? and status = 'Delivered'",
+      [seller_id]
+    );
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//get all prod for admin
+const getAllProductCountForAdmin = async (req, res) => {
+  try {
+    const [resultSets, fields] = await db.query(
+      "select count(*) as totalSellerProd from products "
+    );
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//get total sell for admin
+const getAmountCountForAdmin = async (req, res) => {
+  try {
+    const [resultSets, fields] = await db.query(
+      "select sum(amount) as totalSellerSell from orders where  status = 'Delivered'"
+    );
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//get all order count for admin
+const getOrderCountForAdmin = async (req, res) => {
+  const seller_id = req.userId;
+  try {
+    const [resultSets, fields] = await db.query(
+      "select count(*) as totalSellersOrder from orders"
+    );
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//get order for admin
+const getOrderForAdmin = async (req, res) => {
+  try {
+    const [resultSets, fields] = await db.query("call getOrderForAdmin()");
+    res.status(200).json(resultSets[0]);
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   // getUser,
+  getOrderCountForAdmin,
+  getOrderForAdmin,
+  getAllProductCountForAdmin,
+  getAmountCountForAdmin,
   placeOrder,
+  getSellerAllProductCount,
+  getStatusCountForAdmin,
+  getSellersOrderCount,
+  getSellersAmountCount,
   getUsersOrder,
   onOffEvent,
   getOrderByDate,
   totalUsers,
   getOrderByStatus,
+  getYearWiseSell,
+  getStatusCount,
   fetchSingleSellerOrders,
   addUsersAddress,
   getUsersOrdersProd,

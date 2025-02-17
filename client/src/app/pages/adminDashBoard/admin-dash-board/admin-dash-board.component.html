@@ -12,12 +12,13 @@
       >
         DashBoard
       </li>
-
       <li nz-menu-item class="" [routerLink]="'/superadmin/userList'">
         User List
       </li>
-      <li nz-menu-item class="">Seller List</li>
-      <li nz-menu-item class="">Order List</li>
+      <li nz-menu-item class="" [routerLink]="'/superadmin/sellerList'">
+        Seller List
+      </li>
+      <li nz-menu-item class="" [routerLink]="'/superadmin/orderList'">Order List</li>
 
       <!-- <li nz-submenu nzTitle="Products" nzIcon="user">
         <ul>
@@ -26,7 +27,6 @@
           <li nz-menu-item>Alex</li>
         </ul>
       </li> -->
-
     </ul>
   </nz-sider>
   <nz-layout>
@@ -41,7 +41,9 @@
     </nz-header>
     <nz-content class="innerContent">
       <nz-breadcrumb> </nz-breadcrumb>
-      <div class="inner-content overflow-y-scroll"><router-outlet></router-outlet></div>
+      <div class="inner-content overflow-y-scroll">
+        <router-outlet></router-outlet>
+      </div>
     </nz-content>
   </nz-layout>
 </nz-layout>

@@ -1,1 +1,47 @@
-<p>seller-list works!</p>
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">Seller List</h1>
+  <nz-table #sortTable [nzData]="sellerList" nzTableLayout="fixed">
+    <thead>
+      <tr>
+        <ng-container>
+          <th class="py-2 px-4">Name</th>
+          <th class="py-2 px-4">Email</th>
+          <th class="py-2 px-4">Mobile</th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of sortTable.data; trackBy: sellerList?.order_id">
+        <td class="py-2 px-4">{{ data.name }}</td>
+        <td class="py-2 px-4">{{ data.email }}</td>
+        <td class="py-2 px-4">{{ data.mobile }}</td>
+        <td class="py-2 px-4"></td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <!-- <nz-modal
+        [(nzVisible)]="isVisible"
+        nzTitle="Your Order Projects"
+        nzFooter=" "
+        (nzOnCancel)="handleCancel()"
+        (nzOnOk)="handleOk()"
+      >
+        <ng-container *nzModalContent>
+          <div
+            class="max-w-sm mx-auto p-4 bg-white rounded-lg shadow-lg flex items-center space-x-4"
+            *ngFor="let item of orderProducts"
+          >
+            <img
+              [src]="item?.image"
+              alt="Product Image"
+              class="w-16 h-16 object-cover rounded-md shadow-md"
+            />
+            <div class="flex-1">
+              <div class="text-lg font-semibold">{{ item?.title }}</div>
+              <div class="text-gray-500">${{ item?.amount }}</div>
+              <div class="text-gray-700">Quantity: {{ item?.quantity }}</div>
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal> -->
+</div>

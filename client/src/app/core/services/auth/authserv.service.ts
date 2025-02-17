@@ -244,4 +244,8 @@ export class AuthservService {
   getAllUserForSuperAdmin(): Promise<any> {
     return lastValueFrom(this.http.get(`${this.url}/user/find/all`));
   }
+
+  getOrdersForAdmin(): Promise<any> {
+    return lastValueFrom(this.http.get(`${this.url}/user/admin/getOrdersForAdmin`));
+  }
 }

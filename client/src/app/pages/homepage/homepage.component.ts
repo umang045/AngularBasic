@@ -49,4 +49,5 @@ export class HomepageComponent {
       console.log(error);
     }
   }
+
 }

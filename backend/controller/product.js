@@ -188,6 +188,8 @@ const delImage = async (req, res, next) => {
   } catch (error) {}
 };
 
+
+
 //add to cart
 const addProduct = async (req, res) => {
   const {

@@ -22,6 +22,8 @@ import { SellerHomeComponent } from './pages/sellerHome/seller-home/seller-home.
 import { ReviewListComponent } from './pages/reviewList/review-list/review-list.component';
 import { AdminHomeComponent } from './pages/adminHome/admin-home/admin-home.component';
 import { UserListComponent } from './pages/userList/user-list/user-list.component';
+import { SellerListComponent } from './pages/sellerList/seller-list/seller-list.component';
+import { AdminOrderComponent } from './pages/adminOrder/admin-order/admin-order.component';
 
 export const routes: Routes = [
   {
@@ -146,6 +148,16 @@ export const routes: Routes = [
       {
         path: 'userList',
         component: UserListComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'sellerList',
+        component: SellerListComponent,
+        canActivate: [authGuardGuard],
+      },
+      {
+        path: 'orderList',
+        component: AdminOrderComponent,
         canActivate: [authGuardGuard],
       },
       {

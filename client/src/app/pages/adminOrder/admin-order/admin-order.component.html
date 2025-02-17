@@ -1,0 +1,45 @@
+<nz-table #sortTable [nzData]="adminOrders" nzTableLayout="fixed">
+    <thead>
+      <tr>
+        <ng-container>
+          <th class="py-2 px-4">Order ID</th>
+          <th class="py-2 px-4">Order Date</th>
+          <th class="py-2 px-4">Name</th>
+          <th class="py-2 px-4">Price</th>
+          <th class="py-2 px-4">Status</th>
+          <th class="py-2 px-4">View Order</th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of sortTable.data; trackBy: adminOrders?.order_id">
+        <td class="py-2 px-4">{{ data.order_id }}</td>
+        <td class="py-2 px-4">{{ data.order_date | date : "short" }}</td>
+        <td class="py-2 px-4">{{ data.name }}</td>
+        <td class="py-2 px-4">{{ data.amount }}</td>
+        <!-- <td class="py-2 px-4">{{ data.order_date | date : "short" }}</td> -->
+        <td class="py-2 px-4">
+          <p
+            class="inline-block p-1 rounded-md"
+            [ngClass]="{
+              'status-pending': data.status === 'pending',
+              'status-delivered': data.status === 'Delivered',
+              'status-intransit': data.status === 'InTransit',
+              'status-cancelled': data.status === 'Cancelled'
+            }"
+          >
+            {{ data.status }}
+          </p>
+        </td>
+        <td class="py-2 px-4">
+          <i
+            nz-icon
+            nzType="eye"
+            nzTheme="outline"
+            style="color: blue; cursor: pointer"
+            [routerLink]="['/seller/orderList/', data?.order_id]"
+          ></i>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
