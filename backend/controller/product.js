@@ -188,8 +188,6 @@ const delImage = async (req, res, next) => {
   } catch (error) {}
 };
 
-
-
 //add to cart
 const addProduct = async (req, res) => {
   const {
@@ -202,13 +200,16 @@ const addProduct = async (req, res) => {
     price,
     stock,
     colors,
+    product_tag,
+    product_tag_color,
+    tag_active,
   } = req.body;
 
-  // console.log(colors);
+  console.log(colors);
 
   try {
     const [result] = await db.query(
-      "call manageSellerProduct('addProd',?,?,?,?,?,?,?,?,?)",
+      "call manageSellerProduct('addProd',?,?,?,?,?,?,?,?,?,?,?,?)",
       [
         category_id,
         seller_id,
@@ -218,6 +219,9 @@ const addProduct = async (req, res) => {
         image,
         title,
         description,
+        product_tag,
+        product_tag_color,
+        tag_active,
         null,
       ]
     );
@@ -233,6 +237,13 @@ const addProduct = async (req, res) => {
       [seller_id, product_id, stock, null, stock]
     );
     res.status(200).json({ message: "Product Added SuccesFully..." });
+
+    for (let i = 0; i < colors.length; i++) {
+      const [colorsResult] = await db.query("call addColors(?,?)", [
+        colors[i],
+        product_id,
+      ]);
+    }
   } catch (error) {
     console.error("Error fetching reviews:", error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -250,11 +261,14 @@ const updateProduct = async (req, res) => {
     size,
     price,
     stock,
+    product_tag,
+    product_tag_color,
+    tag_active,
     product_id,
   } = req.body;
   try {
     const result = await db.query(
-      "call manageSellerProduct('updateProd',?,?,?,?,?,?,?,?,?)",
+      "call manageSellerProduct('updateProd',?,?,?,?,?,?,?,?,?,?,?,?)",
       [
         category_id,
         seller_id,
@@ -264,6 +278,9 @@ const updateProduct = async (req, res) => {
         image,
         title,
         description,
+        product_tag,
+        product_tag_color,
+        tag_active,
         product_id,
       ]
     );

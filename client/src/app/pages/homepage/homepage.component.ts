@@ -44,7 +44,7 @@ export class HomepageComponent {
           rating: 3,
         });
       });
-      console.log(this.sharedData);
+      // console.log(this.sharedData);
     } catch (error) {
       console.log(error);
     }

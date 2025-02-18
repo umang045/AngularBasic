@@ -5,12 +5,12 @@ import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
-// import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzUploadChangeParam, NzUploadModule } from 'ng-zorro-antd/upload';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {
   FormControl,
   FormGroup,
@@ -27,10 +27,12 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
   selector: 'app-add-seller-prod',
   imports: [
     NzFormModule,
+    MatSlideToggleModule,
     CommonModule,
     NzSelectModule,
     NzButtonModule,
     NzRadioModule,
+    NzModalModule,
     FormsModule,
     NzColorPickerModule,
     ColorPickerModule,
@@ -57,6 +59,20 @@ export class AddSellerProdComponent {
   selectedSizes: string[] = [];
   selectedColor: string = '#000000';
 
+  selectedTag: string = '';
+  selectedTagColor: string = '#000000';
+  tagActive: boolean = false;
+  tagOptions: string[] = ['Coming Soon', 'Featured'];
+
+  // listOfOption = ['Option 01', 'Option 02'];
+  listOfOption = ['Coming Soon', 'Featured', 'Popular', 'Best Seller'];
+  // defaultOption = [...this.listOfSelectedValue];
+  selectedValue = 'Default';
+  newTag: string = '';
+
+  isVisible = false;
+  isOkLoading = false;
+
   productForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
@@ -68,16 +84,45 @@ export class AddSellerProdComponent {
     product_id: new FormControl(null),
     colors: new FormControl([]),
     size: new FormControl([]),
+    product_tag: new FormControl(''),
+    product_tag_color: new FormControl(''),
+    tag_active: new FormControl(false),
   });
+
+  showModal(): void {
+    this.isVisible = true;
+  }
+  handleOk(): void {
+    this.isOkLoading = true;
+    setTimeout(() => {
+      this.isVisible = false;
+      this.isOkLoading = false;
+    }, 3000);
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+  addNewTag(): void {
+    this.listOfOption.push(this.newTag);
+    this.newTag = '';
+
+    console.log(this.listOfOption);
+  }
+
+  removeTag(tag: string): void {
+    this.listOfOption = this.listOfOption.filter((t) => t !== tag);
+  }
+
   sizeOptions: any = [];
   dropdownSettings = {};
   selectedItems: any = [];
   ngOnInit() {
     this.getUserId();
     this.fetchProdById();
-    console.log(this.productForm.controls['seller_id'].value);
-    console.log(this.uploadedImgId);
-    console.log(this.P_id);
+    // console.log(this.productForm.controls['seller_id'].value);
+    // console.log(this.uploadedImgId);
+    // console.log(this.P_id);
 
     this.sizeOptions = [
       { item_id: 1, item_text: 'M' },
@@ -110,7 +155,6 @@ export class AddSellerProdComponent {
       (s: any) => s != event?.item_text
     );
     this.productForm.controls['size'].setValue(this.selectedItems);
-    
   }
   onColorChange(color: any): void {
     console.log(color);
@@ -136,6 +180,15 @@ export class AddSellerProdComponent {
         this.productForm.controls['price'].setValue(productData[0]?.price);
         this.productForm.controls['stock'].setValue(productData[0]?.stock);
         this.productForm.controls['image'].setValue(productData[0]?.image);
+        this.productForm.controls['product_tag'].setValue(
+          productData[0]?.product_tag
+        );
+        this.productForm.controls['product_tag_color'].setValue(
+          productData[0]?.product_tag_color
+        );
+        this.productForm.controls['tag_active'].setValue(
+          productData[0]?.tag_active
+        );
         this.productForm.controls['category_id'].setValue(
           productData[0]?.category_id
         );
@@ -201,7 +254,7 @@ export class AddSellerProdComponent {
         this.toast.success('Product Added Succesfully');
       }
     } catch (error) {
-      this.toast.error('Something Went Wrong');
+      // this.toast.error('Something Went Wrong');
     }
   }
 
@@ -220,6 +273,25 @@ export class AddSellerProdComponent {
   }
 
   removeColor(color: string) {
-    this.colors = this.colors.filter((c:any) => c !== color);
+    this.colors = this.colors.filter((c: any) => c !== color);
+  }
+
+  onTagSearch(search: string) {
+    // If you want to add a new tag to the options when it's not found
+    if (search && !this.tagOptions.includes(search)) {
+      this.tagOptions = [...this.tagOptions, search];
+    }
+  }
+
+  onTagOpenChange(open: boolean) {
+    if (!open) {
+      // When the dropdown closes, set the selected tag to the form control
+      this.productForm.controls['product_tag'].setValue(this.selectedTag);
+    }
+  }
+
+  onTagColorChange(color: string) {
+    this.selectedTagColor = color;
+    this.productForm.controls['product_tag_color'].setValue(color);
   }
 }

@@ -84,7 +84,7 @@ export class ProductsComponent {
     try {
       const result = await this.prodService.getAllProd();
       this.dbProduct = result;
-      console.log(result);
+      // console.log(typeof result[0]?.avg_rating);
 
       console.log(result);
     } catch (error) {
@@ -174,8 +174,6 @@ export class ProductsComponent {
   }
 
   async handlePriceChange(event: any) {
-    // console.log(event?.target?.value);
-    console.log(event);
     const inputValue = event;
     this.minPrice = inputValue;
     await this.getFilterProducts();
@@ -203,5 +201,8 @@ export class ProductsComponent {
     this.sortOption = sortVal;
     await this.getFilterProducts();
     // console.log(this.sortOption);
+  }
+  convertToNumber(value: any): number {
+    return Number.parseInt(value, 10);
   }
 }

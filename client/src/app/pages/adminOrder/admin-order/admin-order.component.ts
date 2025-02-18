@@ -21,6 +21,7 @@ import { RouterLink } from '@angular/router';
 export class AdminOrderComponent {
   authService = inject(AuthservService);
   adminOrders: any = [];
+
   ngOnInit() {
     this.getAdminsOrders();
   }
@@ -28,6 +29,7 @@ export class AdminOrderComponent {
   async getAdminsOrders() {
     const result = await this.authService.getOrdersForAdmin();
     this.adminOrders = result;
-    console.log(this.adminOrders);
+    // console.log(this.adminOrders);
   }
+
 }

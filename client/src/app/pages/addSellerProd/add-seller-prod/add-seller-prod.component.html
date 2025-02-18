@@ -162,15 +162,53 @@
           Product Sizes
         </label>
         <ng-multiselect-dropdown
-        [placeholder]="'Select Size'"
-        [settings]="dropdownSettings"
-        [data]="sizeOptions"
-        [(ngModel)]="selectedItems"
-        (onSelect)="onSelectSize($event)"
-        (onSelectAll)="onDeSelectSize($event)"
-        (onDeSelect)="onDeSelectSize($event)"
-      >
-      </ng-multiselect-dropdown>
+          [placeholder]="'Select Size'"
+          [settings]="dropdownSettings"
+          [data]="sizeOptions"
+          [(ngModel)]="selectedItems"
+          (onSelect)="onSelectSize($event)"
+          (onSelectAll)="onDeSelectSize($event)"
+          (onDeSelect)="onDeSelectSize($event)"
+        >
+        </ng-multiselect-dropdown>
+      </div>
+
+      <div class="flex flex-col space-y-1">
+        <label for="product-tag" class="text-sm font-semibold text-gray-500">
+          Product Tag
+        </label>
+
+        <nz-select [(ngModel)]="selectedValue" formControlName="product_tag">
+          @for (option of listOfOption; track option) {
+          <nz-option [nzLabel]="option" [nzValue]="option"></nz-option>
+          }
+        </nz-select>
+      </div>
+      <button (click)="showModal()">add New Tag</button>
+
+      <div class="flex flex-col space-y-1">
+        <label
+          for="product-tag-color"
+          class="text-sm font-semibold text-gray-500"
+        >
+          Tag Color
+        </label>
+        <input
+          [(colorPicker)]="selectedTagColor"
+          [style.background]="selectedTagColor"
+          [cpOutputFormat]="'hex'"
+          [value]="selectedTagColor"
+          (colorPickerChange)="onTagColorChange($event)"
+        />
+      </div>
+
+      <div class="flex flex-col space-y-1">
+        <label for="tag-active" class="text-sm font-semibold text-gray-500">
+          Tag Active
+        </label>
+        <mat-slide-toggle formControlName="tag_active" [(ngModel)]="tagActive">
+          {{ tagActive ? "Active" : "Inactive" }}
+        </mat-slide-toggle>
       </div>
     </div>
 
@@ -185,3 +223,34 @@
     </div>
   </form>
 </div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  nzTitle="Add tag"
+  [nzFooter]="' '"
+>
+  <div *nzModalContent class="overflow-y-scroll">
+    <div
+      class="w-full flex justify-between border outline-none border-b-black rounded-lg p-2"
+    >
+      <input
+        type="text"
+        class="outline-none w-full"
+        placeholder="Add New Tag"
+        [(ngModel)]="newTag"
+      />
+      <button type="button" (click)="addNewTag()">Add</button>
+    </div>
+
+    <ul class="flex flex-col justify-around w-full">
+      <li class="flex justify-between" *ngFor="let item of listOfOption">
+        {{ item
+        }}<span class="cursor-pointer" (click)="removeTag(item)"
+          ><nz-icon nzType="delete" nzTheme="outline"
+        /></span>
+      </li>
+    </ul>
+  </div>
+</nz-modal>
