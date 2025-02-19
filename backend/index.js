@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");

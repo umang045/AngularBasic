@@ -202,6 +202,7 @@ export class ProductsComponent {
     await this.getFilterProducts();
     // console.log(this.sortOption);
   }
+  
   convertToNumber(value: any): number {
     return Number.parseInt(value, 10);
   }
