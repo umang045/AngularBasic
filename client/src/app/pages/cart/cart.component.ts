@@ -74,9 +74,11 @@ export class CartComponent {
       this.cartData = result;
       this.total = this.calculateTotal();
     } catch (error) {
-      this.tost.error('Error fetching cart data');
+      // this.tost.error('Error fetching cart data');
+      console.log(error);
     }
   }
+  
   calculateTotal() {
     return this.cartData.reduce((acc: any, item: any) => {
       if (

@@ -196,6 +196,7 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+//update profile pic
 const updateProfilePic = async (req, res) => {
   try {
     const { profile_pic, user_id } = req.body;

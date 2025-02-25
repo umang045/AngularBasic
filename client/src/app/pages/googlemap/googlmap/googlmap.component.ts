@@ -7,12 +7,15 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { ToastrService } from 'ngx-toastr';
 import { AuthservService } from '../../../core/services/auth/authserv.service';
 import { firstValueFrom } from 'rxjs';
+
 @Component({
   selector: 'app-googlmap',
   imports: [CommonModule, FormsModule, NgFor, GoogleMap, GoogleMapsModule],
   templateUrl: './googlmap.component.html',
   styleUrl: './googlmap.component.css',
 })
+
+//export class googlemap
 export class GooglmapComponent {
   http = inject(HttpClient);
   toast = inject(ToastrService);

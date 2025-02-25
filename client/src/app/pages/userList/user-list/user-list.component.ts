@@ -9,10 +9,12 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
 })
+
 export class UserListComponent {
   authService = inject(AuthservService);
   userList: any = [];
   sellerList: any = [];
+
   ngOnInit() {
     this.fetchAllUsers();
   }

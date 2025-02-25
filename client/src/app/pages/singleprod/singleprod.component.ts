@@ -198,7 +198,7 @@ export class SingleprodComponent {
       this.isAdded = this.cartData.some((e: any) => e.product_id == this.P_id);
       console.log(this.isAdded);
     } catch (error) {
-      this.tost.error(' Error fetching cart data');
+      // this.tost.error(' Error fetching cart data');
     }
   }
 

@@ -16,8 +16,6 @@ export class AdminHomeComponent {
   adminTotalSell: any = 0;
   adminTotalProducts: any = 0;
 
-
-
   yr = [
     {
       name: 2023,
@@ -123,9 +121,6 @@ export class AdminHomeComponent {
 
   constructor() {
     Object.assign(this.yr);
-    // this.yrr.push(this.years[0]);
-    // console.log(this.years[0], this.yr, this.yrr);
-    // this.onYearChange()
   }
 
   ngOnInit() {
@@ -197,6 +192,7 @@ export class AdminHomeComponent {
       console.log(error);
     }
   }
+
   async fetchTotalOrderForAdmin() {
     try {
       const result = await this.authService.getAllOrderForAdmin();
@@ -206,6 +202,7 @@ export class AdminHomeComponent {
       console.log(error);
     }
   }
+
   async fetchTotalSellForAdmin() {
     try {
       const result = await this.authService.getAllSellForAdmin();
@@ -215,6 +212,7 @@ export class AdminHomeComponent {
       console.log(error);
     }
   }
+
   async fetchTotalProdForAdmin() {
     try {
       const result = await this.authService.getAllProdForAdmin();

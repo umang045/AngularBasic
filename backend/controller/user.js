@@ -489,6 +489,7 @@ const getStatusCount = async (req, res) => {
   }
 };
 
+//status count for admin
 const getStatusCountForAdmin = async (req, res) => {
   // const seller_id = req.userId;
   // console.log(seller_id);
