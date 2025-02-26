@@ -13,6 +13,10 @@ export const authGuardGuard: CanActivateFn = (
   let router = inject(Router);
   const localData: any = localStorage.getItem('userDetail');
 
+  const token: any = localStorage.getItem('token');
+  // console.log(token);
+  // const decode_token = 
+  
   if (!localData) {
     router.navigateByUrl('/login');
     return false;
